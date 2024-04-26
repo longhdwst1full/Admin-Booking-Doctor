@@ -15,6 +15,7 @@ import ProductPage from '~/pages/ProductPage/ProductPage'
 import CreateProduct from '~/pages/ProductPage/CreateProduct'
 import DefaultLayout from '~/layouts/DefaultLayout/DefaultLayout'
 import ProfilePage from '~/pages/Profile/profile-page'
+import BlogCreate from '~/pages/BlogPage/BlogCreate'
 
 const routers = createBrowserRouter([
   {
@@ -45,7 +46,8 @@ const routers = createBrowserRouter([
           { path: 'categories', element: <CategoryPage /> },
           { path: 'orders', element: <OrderPage /> },
           { path: 'category-blog', element: <CategoryBlogPage /> },
-          { path: 'blogs', element: <BlogPage /> }
+          { path: 'blogs', element: <BlogPage /> },
+          { path: 'blogs/create', element: <BlogCreate /> }
         ]
       }
     ]

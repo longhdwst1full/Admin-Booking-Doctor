@@ -68,7 +68,7 @@ export default function ProductPage() {
   ];
   
   return <div>
-    <h2 className='pl-5 mb-5 !text-black '>Chuyên ngành</h2>
+    <h2 className='pl-5 mb-5 !text-black '>Service</h2>
   <Table dataSource={dataSource} columns={columns} />
 
   </div>
