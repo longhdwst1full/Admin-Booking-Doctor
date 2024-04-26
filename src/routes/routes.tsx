@@ -12,6 +12,7 @@ import StaffPage from '~/pages/StaffPage/StaffPage'
 import Dashboard from '~/pages/Dashboard/Dashboard'
 import SignIn from '~/pages/SignIn/SignIn'
 import ProductPage from '~/pages/ProductPage/ProductPage'
+import CreateProduct from '~/pages/ProductPage/CreateProduct'
 import DefaultLayout from '~/layouts/DefaultLayout/DefaultLayout'
 import ProfilePage from '~/pages/Profile/profile-page'
 
@@ -37,6 +38,7 @@ const routers = createBrowserRouter([
         element: <GuardAccount JSX={DefaultLayout} />,
         children: [
           { path: 'products', element: <ProductPage /> },
+          { path: 'products/create', element: <CreateProduct /> },
           { path: 'appointments', element: <ProductPage /> },
           { path: 'customers', element: <CustomerPage /> },
           { path: 'staffs', element: <StaffPage /> },
