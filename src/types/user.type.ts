@@ -50,3 +50,32 @@ export enum IRoleUser {
   CUSTOMER = 'customer',
   STAFF = 'staff'
 }
+
+// c# res type
+export interface IUserDTO {
+  Id: string
+  UserName: string
+  Avatar: string
+  Email: string
+  Address: string
+  Phone: string // Change from int to string
+  RoleName: string
+}
+export interface IUserUpdateDTO {
+  UserName: string
+  Email: string
+  Phone: string
+  id: string
+}
+export interface IUpdatePassWorduserDTO {
+  PassWord: string
+  id: string
+}
+
+export interface ICreateUser {
+  Id: string
+  UserName: string
+  Password: string
+  Email: string
+  Phone: string
+}

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
-import { ICategoryBlog, ICategoryBlogDocs } from '~/types'
-
+import { ICategoryBlog, ICategoryBlogDocs } from '~/types/categoryBlog.type';
+ 
 export const categoryBlogApi = createApi({
   reducerPath: 'categoryBlogApi',
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API }),

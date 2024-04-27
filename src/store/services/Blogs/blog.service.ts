@@ -1,5 +1,7 @@
-import { IBlogs, IBlogsDocs, IResImage } from '~/types'
+ 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { IBlogs, IBlogsDocs } from '~/types/blog.type'
+import { IResImage } from '~/types/image.type'
 
 export const blogApi = createApi({
   reducerPath: 'blogApi',

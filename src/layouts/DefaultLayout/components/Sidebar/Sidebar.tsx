@@ -7,7 +7,7 @@ import { Menu } from 'antd'
 import { RootState } from '~/store/store'
 import { useAppSelector } from '~/store/hooks'
 import BarsIcon from '~/components/Icons/BarsIcon'
-import { items, itemsStaff } from './MenuItem'
+import { items, itemsStaff } from '../../MenuItem'
 
 interface SidebarProps {
   sidebarOpen: boolean

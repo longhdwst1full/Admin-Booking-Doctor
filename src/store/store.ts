@@ -12,14 +12,19 @@ import { categoryBlogApi } from './services/CategoryBlog/CategoryBlog.service'
 import { orderApi } from './services/Orders/orders.service'
 import { productApi } from './services/Products/product.service'
 import { userApi } from './services/Users/user.service'
+import { clinicsApi } from './services/clinics'
+import { doctorApi } from './services/docter'
+import { roleApi } from './services/role.service'
+import { servicesApi } from './services/services.service'
 import { authReducer } from './slices/auth.slice'
 import { blogReducer } from './slices/blog.slice'
 import { categoryReducer } from './slices/category.slice'
 import { categoryBlogReducer } from './slices/categoryBlog.slice'
 import { orderReducer } from './slices/order.slice'
+import { productReducers } from './slices/product.slice'
 import { themeReducer } from './slices/theme.slice'
 import { userReducer } from './slices/user.slice'
-import { productReducers } from './slices/product.slice'
+import { specialtyApi } from './services/specialty'
 
 const persistConfig = {
   key: 'root',
@@ -41,7 +46,12 @@ const middlewares = [
   orderApi.middleware,
   blogApi.middleware,
   AuthApi.middleware,
-  categoryBlogApi.middleware
+  categoryBlogApi.middleware,
+  doctorApi.middleware,
+  roleApi.middleware,
+  servicesApi.middleware,
+  clinicsApi.middleware,
+  specialtyApi.middleware
 ]
 
 export const store = configureStore({
@@ -54,6 +64,11 @@ export const store = configureStore({
     [blogApi.reducerPath]: blogApi.reducer,
     [AuthApi.reducerPath]: AuthApi.reducer,
     [categoryBlogApi.reducerPath]: categoryBlogApi.reducer,
+    [doctorApi.reducerPath]: doctorApi.reducer,
+    [roleApi.reducerPath]: roleApi.reducer,
+    [servicesApi.reducerPath]: servicesApi.reducer,
+    [clinicsApi.reducerPath]: clinicsApi.reducer,
+    [specialtyApi.reducerPath]: specialtyApi.reducer,
     /* redux toolkit */
     persistedReducer,
     theme: themeReducer,

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { RootState } from '~/store/store'
-import { IResImage, IUserDocs } from '~/types'
+import { ICreateUser, IUpdatePassWorduserDTO, IUserDocs, IUserUpdateDTO } from '~/types/user.type'
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -19,60 +19,51 @@ export const userApi = createApi({
   tagTypes: ['User'],
   endpoints: (builder) => ({
     getAllUser: builder.query<IUserDocs, void>({
-      query: () => `/users?page=1`,
+      query: () => `/User`,
       providesTags: ['User']
     }),
 
-    getAllUserByRole: builder.query<any, { limit: number; page: number; roleName: 'customer' | 'staff' }>({
-      query: (options) => `/users/roles/${options.roleName}?_page=${options.page}&_limit=${options.limit}`,
-      providesTags: ['User']
-    }),
-
-    addUser: builder.mutation<any, any>({
+    addUser: builder.mutation<any, ICreateUser>({
       query: (user) => ({
-        url: '/users',
+        url: '/User',
         method: 'POST',
         body: user
       }),
       invalidatesTags: ['User']
     }),
 
-    updateUser: builder.mutation<any, any>({
+    updateUser: builder.mutation<any, IUserUpdateDTO>({
       query: (user) => ({
-        url: `/users/${user._id}`,
-        method: 'PATCH',
+        url: `/User/${user.id}`,
+        method: 'PUT',
         body: {
-          username: user.username,
-          gender: user.gender,
-          role: user.role,
-          avatar: user.avatar
+          ...user
         }
-        // credentials: 'include'
       }),
       invalidatesTags: ['User']
     }),
 
     deleteUser: builder.mutation({
       query: (id: string) => ({
-        url: `/users/${id}`,
+        url: `/User/${id}`,
         method: 'DELETE'
       }),
       invalidatesTags: ['User']
     }),
 
-    upLoadAvartaUser: builder.mutation<IResImage, FormData>({
-      query: (file) => ({
-        url: '/uploadImages',
+    // update password
+    updatePassUserId: builder.mutation<{ message: string }, IUpdatePassWorduserDTO>({
+      query: (data) => ({
+        url: '/User/update/password/' + data.id,
         method: 'POST',
-        body: file
+        body: data
       })
     }),
-
     // update password
-    updatePassword: builder.mutation<{ message: string }, { password: string; passwordNew: string }>({
+    updateRoleUserId: builder.mutation<{ message: string }, any>({
       query: (data) => ({
-        url: '/user/updatePassword',
-        method: 'PATCH',
+        url: '/User/update/role-user/' + data.id,
+        method: 'POST',
         body: data
       })
     })
@@ -80,11 +71,10 @@ export const userApi = createApi({
 })
 
 export const {
-  useUpdatePasswordMutation,
   useGetAllUserQuery,
   useAddUserMutation,
-  useGetAllUserByRoleQuery,
-  useUpLoadAvartaUserMutation,
+  useUpdatePassUserIdMutation,
+  useUpdateRoleUserIdMutation,
   useUpdateUserMutation,
   useDeleteUserMutation
 } = userApi
