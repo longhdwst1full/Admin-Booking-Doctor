@@ -1,21 +1,21 @@
-import BlogPage from '~/pages/BlogPage/BlogPage'
-import CategoryBlogPage from '~/pages/CategoryBlogPage/CategoryBlogPage'
+import SpecialtyPage from '~/pages/Specialty/SpecialtyPage'
 
-import { GuardAccount } from './guardRoute'
 import { createBrowserRouter } from 'react-router-dom'
-import CategoryPage from '~/pages/CategoryPage/CategoryPage'
+import DefaultLayout from '~/layouts/DefaultLayout/DefaultLayout'
+import AppointmentPage from '~/pages/AppointmentPage/AppointmentPage'
 import ChangePassword from '~/pages/ChangePass'
+import ClinicPage from '~/pages/ClinicPage/ClinicPage'
 import CustomerPage from '~/pages/CustomerPage/CustomerPage'
+import Dashboard from '~/pages/Dashboard/Dashboard'
+import DoctorPage from '~/pages/Doctor/DoctorPage'
 import NotFound from '~/pages/NotFound/NotFound'
 import OrderPage from '~/pages/OrdersPage/OrderPage'
-import StaffPage from '~/pages/StaffPage/StaffPage'
-import Dashboard from '~/pages/Dashboard/Dashboard'
-import SignIn from '~/pages/SignIn/SignIn'
-import ProductPage from '~/pages/ProductPage/ProductPage'
-import CreateProduct from '~/pages/ProductPage/CreateProduct'
-import DefaultLayout from '~/layouts/DefaultLayout/DefaultLayout'
 import ProfilePage from '~/pages/Profile/profile-page'
-import BlogCreate from '~/pages/BlogPage/BlogCreate'
+import RolePage from '~/pages/RolePage/RolePage'
+import { default as ServicesPage } from '~/pages/ServicesPage/ServicesPage'
+import SignIn from '~/pages/SignIn/SignIn'
+import UserPage from '~/pages/User/UserPage'
+import { GuardAccount } from './guardRoute'
 
 const routers = createBrowserRouter([
   {
@@ -38,16 +38,16 @@ const routers = createBrowserRouter([
       {
         element: <GuardAccount JSX={DefaultLayout} />,
         children: [
-          { path: 'products', element: <ProductPage /> },
-          { path: 'products/create', element: <CreateProduct /> },
-          { path: 'appointments', element: <ProductPage /> },
+          { path: 'services', element: <ServicesPage /> },
+          { path: 'doctor', element: <DoctorPage /> },
+          { path: 'role', element: <RolePage /> },
+
+          { path: 'appointments', element: <AppointmentPage /> },
           { path: 'customers', element: <CustomerPage /> },
-          { path: 'staffs', element: <StaffPage /> },
-          { path: 'categories', element: <CategoryPage /> },
+          { path: 'users', element: <UserPage /> },
+          { path: 'clinic', element: <ClinicPage /> },
           { path: 'orders', element: <OrderPage /> },
-          { path: 'category-blog', element: <CategoryBlogPage /> },
-          { path: 'blogs', element: <BlogPage /> },
-          { path: 'blogs/create', element: <BlogCreate /> }
+          { path: 'specialites', element: <SpecialtyPage /> }
         ]
       }
     ]

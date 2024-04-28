@@ -1,24 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { RootState } from '~/store/store'
-import { ICreateUser, IUpdatePassWorduserDTO, IUserDocs, IUserUpdateDTO } from '~/types/user.type'
+import { ICreateUser, IUpdatePassWorduserDTO, IUsers, IUserUpdateDTO } from '~/types/user.type'
 
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API,
-    credentials: 'include',
-    prepareHeaders: (headers, { getState }) => {
-      const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
-
-      if (accessToken) {
-        headers.set('authorization', `Bearer ${accessToken}`)
-      }
-      return headers
-    }
+    credentials: 'include'
   }),
   tagTypes: ['User'],
   endpoints: (builder) => ({
-    getAllUser: builder.query<IUserDocs, void>({
+    getAllUser: builder.query<IUsers[], void>({
       query: () => `/User`,
       providesTags: ['User']
     }),

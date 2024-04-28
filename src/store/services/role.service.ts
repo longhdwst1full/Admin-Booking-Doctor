@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { RootState } from '~/store/store'
-import { IUserDocs } from '~/types/user.type'
+import { IRole } from '~/types/user.type'
 
 export const roleApi = createApi({
   reducerPath: 'roleApi',
@@ -18,11 +18,11 @@ export const roleApi = createApi({
   }),
   tagTypes: ['Role'],
   endpoints: (builder) => ({
-    getAllRole: builder.query<IUserDocs, void>({
+    getAllRole: builder.query<IRole[], void>({
       query: () => `/`,
       providesTags: ['Role']
     }),
-    getRole: builder.query<IUserDocs, void>({
+    getRole: builder.query<IRole, void>({
       query: (id) => `/${id}`,
       providesTags: ['Role']
     }),

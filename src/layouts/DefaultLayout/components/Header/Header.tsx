@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 
 import DropdownUser from './components/DropdownUser'
-import DarkModeSwitcher from './components/DarkModeSwitcher/DarkModeSwitcher';
-import DropdownNotification from './components/DropdownNotification/DropdownNotification';
+import DarkModeSwitcher from './components/DarkModeSwitcher/DarkModeSwitcher'
+import DropdownNotification from './components/DropdownNotification/DropdownNotification'
 
 const Header = (props: { sidebarOpen: string | boolean | undefined; setSidebarOpen: (arg0: boolean) => void }) => {
   return (

@@ -1,11 +1,8 @@
-
 import { Button, Form, Input, message } from 'antd'
 
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '~/store/hooks'
 import { useLogOutMutation } from '~/store/services/Auth/auth'
-import { useUpdatePasswordMutation } from '~/store/services/Users/user.service'
-
 
 type FieldType = {
   password: string
@@ -119,4 +116,7 @@ export default function ChangePassword() {
       </div>
     </div>
   )
+}
+function useUpdatePasswordMutation(): [any, any] {
+  throw new Error('Function not implemented.')
 }

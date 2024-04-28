@@ -36,7 +36,7 @@ export const items: MenuProps['items'] = [
     getItem(<NavLink to={`/manager/products`}>Sản phẩm</NavLink>, 'products', <ShoppingOutlined />),
     getItem(<NavLink to={`/manager/categories`}>Danh mục</NavLink>, 'categories', <BiSolidCategoryAlt />),
     getItem(<NavLink to={`/manager/appointments`}>Cuộc hẹn</NavLink>, 'Appointments', <FaListUl />),
-    getItem(<NavLink to={`/manager/specialites`}>Specialities</NavLink>, 'Appointments', <FaPeopleArrows />),
+    getItem(<NavLink to={`/manager/specialites`}>Specialities</NavLink>, 'Specialities', <FaPeopleArrows />),
 
     getItem(<NavLink to={`/manager/category-blog`}>Danh mục bài viết</NavLink>, 'category-blog', <BiCategoryAlt />),
     getItem(<NavLink to={`/manager/blogs`}>Bài viết</NavLink>, 'blogs', <FaRegNewspaper />)
@@ -55,11 +55,12 @@ export const itemsStaff: MenuProps['items'] = [
 
   // quản lý sản phẩm
   getItem('Quản lý', 'manager', <AiOutlineControl />, [
-    getItem(<NavLink to={`/manager/doctor`}>Doctor</NavLink>, 'doctor', <ShoppingOutlined />),
-    getItem(<NavLink to={`/manager/clinic`}>Clinic</NavLink>, 'clinic', <BiSolidCategoryAlt />),
+    getItem(<NavLink to={`/manager/doctor`}>Bác sĩ</NavLink>, 'doctor', <ShoppingOutlined />),
+    getItem(<NavLink to={`/manager/clinic`}>Phòng Khám</NavLink>, 'clinic', <BiSolidCategoryAlt />),
+    getItem(<NavLink to={`/manager/services`}>Dịch vụ</NavLink>, 'services', <BiSolidCategoryAlt />),
 
     getItem(<NavLink to={`/manager/appointments`}>Cuộc hẹn</NavLink>, 'Appointments', <FaListUl />),
-    getItem(<NavLink to={`/manager/specialites`}>Specialities</NavLink>, 'Appointments', <FaPeopleArrows />),
+    getItem(<NavLink to={`/manager/specialites`}>Chuyên khoa</NavLink>, 'Specialities', <FaPeopleArrows />),
 
     getItem(<NavLink to={`/manager/role`}>Role</NavLink>, 'role', <BiCategoryAlt />)
     // quản lý người dùng

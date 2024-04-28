@@ -1,39 +1,27 @@
-export interface IUserDocs {
-  docs: IUser[]
-  totalDocs: number
-  limit: number
-  totalPages: number
-  page: number
-  pagingCounter: number
-  hasPrevPage: boolean
-  hasNextPage: boolean
-  prevPage: number | null
-  nextPage: number | null
+export interface IUsers {
+  id: string
+  userName: string
+  avatar: string
+  email: string
+  address: string
+  phone: string
+  roleName: string
 }
-
-export interface IUser {
-  _id: string
-  googleId?: string
-  username?: string
-  account?: string
-  avatar?: string
-  password?: string
-  address?: string
-  products?: string[]
-  order?: string[]
-  role: string
-  email?: string
-  status?: string
-  deleted?: boolean
-  accessToken?: string
-  refreshToken?: string
-  birthday?: Date
-  grade?: number
-  gender?: string
-}
-
-export interface ResIUser {
-  user: IUser
+// export interface IUsers {
+//   id: number
+//   userName: string
+//   password: string
+//   email: string
+//   phone: number
+//   roleId: number
+//   role: Role
+//   appointments: Appointment[]
+//   appointmentHistories: AppointmentHistory4[]
+// }
+export interface IRole {
+  id: number
+  name: string
+  user: string[]
 }
 
 export interface IUserDataType {
@@ -53,22 +41,22 @@ export enum IRoleUser {
 
 // c# res type
 export interface IUserDTO {
-  Id: string
-  UserName: string
-  Avatar: string
-  Email: string
-  Address: string
-  Phone: string // Change from int to string
-  RoleName: string
+  id: string
+  userName: string
+  avatar: string
+  email: string
+  address: string
+  phone: string // Change from int to string
+  roleName: string
 }
 export interface IUserUpdateDTO {
-  UserName: string
-  Email: string
-  Phone: string
+  userName: string
+  email: string
+  phone: string
   id: string
 }
 export interface IUpdatePassWorduserDTO {
-  PassWord: string
+  passWord: string
   id: string
 }
 

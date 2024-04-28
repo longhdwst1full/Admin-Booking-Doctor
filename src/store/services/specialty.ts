@@ -1,29 +1,27 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { RootState } from '~/store/store'
-import { CreateSpecialty, PostSpecialtyResponse, ResponeDoctorInSpec } from '~/types/specialties.type'
-import { IUserDocs } from '~/types/user.type'
+import { CreateSpecialty, ISpecialty, PostSpecialtyResponse, ResponeDoctorInSpec } from '~/types/specialties.type'
 
 export const specialtyApi = createApi({
   reducerPath: 'specialtyApi',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API + '/Specialty',
-    credentials: 'include',
-    prepareHeaders: (headers, { getState }) => {
-      const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
+    credentials: 'include'
+    // prepareHeaders: (headers, { getState }) => {
+    //   const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
 
-      if (accessToken) {
-        headers.set('authorization', `Bearer ${accessToken}`)
-      }
-      return headers
-    }
+    //   if (accessToken) {
+    //     headers.set('authorization', `Bearer ${accessToken}`)
+    //   }
+    //   return headers
+    // }
   }),
   tagTypes: ['Specialty'],
   endpoints: (builder) => ({
-    getAllSpecialty: builder.query<IUserDocs, void>({
+    getAllSpecialty: builder.query<ISpecialty[], void>({
       query: () => `/`,
       providesTags: ['Specialty']
     }),
-    getSpecialty: builder.query<IUserDocs, void>({
+    getSpecialty: builder.query<ISpecialty, void>({
       query: (id) => `/${id}`,
       providesTags: ['Specialty']
     }),

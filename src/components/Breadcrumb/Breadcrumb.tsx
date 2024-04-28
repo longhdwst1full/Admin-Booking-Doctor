@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
+import Button from '../Button/Button'
+import PlusIcon from '../Icons/PlusIcon'
 
 interface BreadcrumbProps {
   pageName: string
-  children?: React.ReactNode
+  openDrawer?: () => void
 }
-const Breadcrumb = ({ pageName, children }: BreadcrumbProps) => {
+const Breadcrumb = ({ pageName, openDrawer }: BreadcrumbProps) => {
   return (
     <div className='mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
       <nav>
@@ -15,7 +17,11 @@ const Breadcrumb = ({ pageName, children }: BreadcrumbProps) => {
           <li className='text-primary'>{pageName}</li>
         </ol>
       </nav>
-      <>{children ? children : <div className=''></div>}</>
+      <>
+        <Button icon={<PlusIcon />} onClick={openDrawer}>
+          Thêm
+        </Button>
+      </>
     </div>
   )
 }

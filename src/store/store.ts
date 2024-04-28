@@ -6,22 +6,13 @@ import { useDispatch } from 'react-redux'
 import storage from 'redux-persist/lib/storage'
 
 import { AuthApi } from './services/Auth/auth'
-import { blogApi } from './services/Blogs/blog.service'
-import { categoryApi } from './services/Categories/category.service'
-import { categoryBlogApi } from './services/CategoryBlog/CategoryBlog.service'
 import { orderApi } from './services/Orders/orders.service'
-import { productApi } from './services/Products/product.service'
 import { userApi } from './services/Users/user.service'
 import { clinicsApi } from './services/clinics'
 import { doctorApi } from './services/docter'
 import { roleApi } from './services/role.service'
 import { servicesApi } from './services/services.service'
 import { authReducer } from './slices/auth.slice'
-import { blogReducer } from './slices/blog.slice'
-import { categoryReducer } from './slices/category.slice'
-import { categoryBlogReducer } from './slices/categoryBlog.slice'
-import { orderReducer } from './slices/order.slice'
-import { productReducers } from './slices/product.slice'
 import { themeReducer } from './slices/theme.slice'
 import { userReducer } from './slices/user.slice'
 import { specialtyApi } from './services/specialty'
@@ -41,12 +32,11 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const middlewares = [
   userApi.middleware,
-  categoryApi.middleware,
-  productApi.middleware,
+
   orderApi.middleware,
-  blogApi.middleware,
+
   AuthApi.middleware,
-  categoryBlogApi.middleware,
+
   doctorApi.middleware,
   roleApi.middleware,
   servicesApi.middleware,
@@ -58,12 +48,11 @@ export const store = configureStore({
   reducer: {
     /* redux toolkit query */
     [userApi.reducerPath]: userApi.reducer,
-    [categoryApi.reducerPath]: categoryApi.reducer,
-    [productApi.reducerPath]: productApi.reducer,
+
     [orderApi.reducerPath]: orderApi.reducer,
-    [blogApi.reducerPath]: blogApi.reducer,
+
     [AuthApi.reducerPath]: AuthApi.reducer,
-    [categoryBlogApi.reducerPath]: categoryBlogApi.reducer,
+
     [doctorApi.reducerPath]: doctorApi.reducer,
     [roleApi.reducerPath]: roleApi.reducer,
     [servicesApi.reducerPath]: servicesApi.reducer,
@@ -72,12 +61,8 @@ export const store = configureStore({
     /* redux toolkit */
     persistedReducer,
     theme: themeReducer,
-    categories: categoryReducer,
-    products: productReducers,
-    orders: orderReducer,
-    blogs: blogReducer,
-    user: userReducer,
-    categoryBlog: categoryBlogReducer
+
+    user: userReducer
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.

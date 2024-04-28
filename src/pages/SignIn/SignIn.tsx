@@ -57,11 +57,11 @@ export default function SignIn() {
                     type='email'
                     id='email'
                     placeholder='Email của bạn'
-                    {...register('account')}
+                    {...register('email')}
                     className='border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none'
                   />
 
-                  {errors.account && <span className='text-danger text-[13px] self-start'>Email là bắt buộc</span>}
+                  {errors.email && <span className='text-danger text-[13px] self-start'>Email là bắt buộc</span>}
 
                   <span className='right-4 top-4 absolute'>
                     <EmailIcon />

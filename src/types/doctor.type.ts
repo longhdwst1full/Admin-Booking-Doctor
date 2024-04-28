@@ -1,19 +1,31 @@
+import { IAppointmentHistory } from './appointment'
+
 export interface IAddDoctor {
-  SpecialtyID: string
-  DoctorName: string
-  Password: string
-  Email: string
+  specialtyID: string
+  doctorName: string
+  password: string
+  email: string
 }
 export interface IGellAllDoctor {
-  Id: string
-  DoctorName: string
-  Specialty: string
+  id: string
+  doctorName: string
+  specialty: string
 }
 
 export interface IPostDoctorResponse {
-  DoctorId: string
-  DoctorName: string
-  Email: string
-  Specialty: any
+  doctorId: string
+  doctorName: string
+  email: string
+  specialty: any
   // Specialty: Specialties
+}
+
+export interface IDoctor {
+  doctorId: number
+  doctorName: string
+  specialtyID: number
+  specialtyName: string
+  specialty: string
+  appointments: string[]
+  appointmentHistories: IAppointmentHistory[]
 }
