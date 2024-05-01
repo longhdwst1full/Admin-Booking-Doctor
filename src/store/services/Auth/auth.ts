@@ -9,7 +9,7 @@ export const AuthApi = createApi({
   endpoints: (builder) => ({
     signIn: builder.mutation<ResIUser, Login>({
       query: ({ ...rest }) => ({
-        url: '/login',
+        url: '/Auth/Login',
         body: rest,
         method: 'POST',
         credentials: 'include'
