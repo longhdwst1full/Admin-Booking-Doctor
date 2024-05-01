@@ -1,6 +1,6 @@
-import { Button, Drawer, Image, Space, Table } from 'antd'
+import { Button, Drawer, Space, Table } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 import { useDeleteRoleMutation, useGetAllRoleQuery } from '~/store/services/role.service'
@@ -14,49 +14,22 @@ export default function RolePage() {
 
   const handleGetdataRole = (id: string) => {
     const user = dataRoles?.find((item) => item.id === +id)
-    user ? setDataEdit(user) : toast.error('Không tìm thấy người dùng')
+    user ? setDataEdit(user) : toast.error('Không tìm thấy quyền')
   }
 
   const columns: ColumnsType<any> = [
-    {
-      key: 'image',
-      dataIndex: 'image',
-      title: 'Image',
-      render: (img) => <Image src={img} width={150} />
-    },
     {
       key: 'title',
       dataIndex: 'title',
       title: 'Title'
     },
-    {
-      key: 'description',
-      dataIndex: 'description',
-      title: 'Description'
-    },
-    {
-      key: 'category',
-      dataIndex: 'category',
-      title: 'Category'
-    },
-    {
-      key: 'numViews',
-      dataIndex: 'numViews',
-      title: 'Number of views'
-    },
 
     {
-      key: 'likes',
-      dataIndex: 'likes',
-      title: 'Likes',
-      render: (_, { likes }) => <span>{likes.length}</span>
+      key: 'name',
+      dataIndex: 'name',
+      title: 'name'
     },
-    {
-      key: 'dislikes',
-      dataIndex: 'dislikes',
-      title: 'Dislikes',
-      render: (_, { dislikes }) => <span>{dislikes.length}</span>
-    },
+
     {
       key: 'action',
       title: 'Action',
@@ -92,7 +65,7 @@ export default function RolePage() {
 
       <Table columns={columns} dataSource={dataRoles} />
       <Drawer
-        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} người dùng`}
+        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} quyền`}
         placement='right'
         width={700}
         onClose={() => setOpenDrawer(!openDrawer)}

@@ -1,45 +1,31 @@
-import { Button, Form, Input } from 'antd'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { Button, Form, Input, Select } from 'antd'
+import { useEffect } from 'react'
+import { useAddDoctorMutation, useUpdateDoctorMutation } from '~/store/services/docter'
+import { useGetAllSpecialtyQuery } from '~/store/services/specialty'
+import { IDoctor } from '~/types/doctor.type'
 
 interface Props {
-  dataDoctor?: any
+  dataDoctor?: IDoctor
 }
 const DoctorCreate = ({ dataDoctor }: Props) => {
   const [form] = Form.useForm()
-  const [dataSevice, setDataService] = useState<any>()
+   
+  const { data: dataSpecicaly } = useGetAllSpecialtyQuery()
+  const [addDoctorFn] = useAddDoctorMutation()
+  const [updateDoctorFn] = useUpdateDoctorMutation()
 
   useEffect(() => {
-    const handelGetIdService = async () => {
-      const { data } = await axios.get('https://localhost:7212/api/Specialty/' + dataDoctor.id)
-      console.log(data, 'pl')
-      setDataService(data)
+    if (dataDoctor && dataDoctor.specialtyID) {
+      form.setFieldsValue(dataDoctor)
+      form.setFieldValue('password', undefined)
     }
-    handelGetIdService()
-  }, [])
-  useEffect(() => {
-    form.setFieldsValue({
-      username: dataSevice?.specialtyName
-    })
-  }, [form, dataSevice])
-  const onFinish = (values: any) => {
-    var dataBody = {
-      specialtyName: values.username
-    }
-    if (!dataDoctor.id) {
-      axios
-        .post('https://localhost:7212/api/Doctor', dataBody)
-        .then((items: any) => {
-          window.location.href = '/manager/blogs'
-        })
-        .catch((e) => console.log(e))
+  }, [dataDoctor, form])
+
+  const onFinish = async (values: any) => {
+    if (!dataDoctor?.specialtyID) {
+      await addDoctorFn(values)
     } else {
-      axios
-        .put('https://localhost:7212/api/Doctor/' + dataDoctor.id, dataBody)
-        .then((items: any) => {
-          window.location.href = '/manager/blogs'
-        })
-        .catch((e) => console.log(e))
+      await updateDoctorFn({ ...values, id: dataDoctor.specialtyID })
     }
   }
 
@@ -60,12 +46,34 @@ const DoctorCreate = ({ dataDoctor }: Props) => {
         autoComplete='off'
       >
         <Form.Item
-          label='serviceName'
-          name='username'
-          rules={[{ required: true, message: 'Please input your serviceName!' }]}
+          label='Tên bác sĩ'
+          name='doctorName'
+          rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}
         >
           <Input />
         </Form.Item>
+        <Form.Item
+          label='Chuyên khoa'
+          name='specialtyID'
+          rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}
+        >
+          <Select
+            placeholder='Chọn chuyên khoa'
+            options={dataSpecicaly?.map((item) => ({
+              value: item.id,
+              label: item.specialtyName
+            }))}
+          />
+        </Form.Item>
+        <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+          <Input type='email' />
+        </Form.Item>
+        {!(dataDoctor && dataDoctor?.specialtyID) && (
+          <Form.Item label='Mật khẩu' name='password' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+            <Input.Password />
+          </Form.Item>
+        )}
+
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type='primary' htmlType='submit'>
             Submit

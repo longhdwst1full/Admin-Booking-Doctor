@@ -1,29 +1,28 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { RootState } from '~/store/store'
-import { IAddClinic } from '~/types/clinic.type'
-import { IUserDocs } from '~/types/user.type'
+import { IAddClinic, IClinic } from '~/types/clinic.type'
 
 export const clinicsApi = createApi({
   reducerPath: 'clinicsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API + '/Clinics',
-    credentials: 'include',
-    prepareHeaders: (headers, { getState }) => {
-      const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
+    credentials: 'include'
+    // prepareHeaders: (headers, { getState }) => {
+    //   const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
 
-      if (accessToken) {
-        headers.set('authorization', `Bearer ${accessToken}`)
-      }
-      return headers
-    }
+    //   if (accessToken) {
+    //     headers.set('authorization', `Bearer ${accessToken}`)
+    //   }
+    //   return headers
+    // }
   }),
   tagTypes: ['Clinics'],
   endpoints: (builder) => ({
-    getAllClinics: builder.query<IUserDocs, void>({
+    getAllClinics: builder.query<IClinic[], void>({
       query: () => `/`,
       providesTags: ['Clinics']
     }),
-    getClinic: builder.query<IUserDocs, void>({
+    getClinic: builder.query<IClinic, void>({
       query: (id) => `/${id}`,
       providesTags: ['Clinics']
     }),

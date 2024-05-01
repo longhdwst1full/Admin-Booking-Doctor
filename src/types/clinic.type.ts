@@ -1,7 +1,7 @@
 export interface IAddClinic {
-  ClinicName: string
-  Phone: string
-  Address: string
+  clinicName: string
+  phone: string
+  address: string
 }
 
 export interface IClinic {

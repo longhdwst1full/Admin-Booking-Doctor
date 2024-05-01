@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function ClinicCreate({ dataUser }: Props) {
-  const [createUser, { isLoading, isError: errAdd, data }] = useAddClinicMutation()
+  const [createClinic, { isLoading, isError: errAdd, data }] = useAddClinicMutation()
   const [updateUser, { isError: errUpdate }] = useUpdateClinicMutation()
   const [form] = Form.useForm()
 
@@ -26,14 +26,14 @@ export default function ClinicCreate({ dataUser }: Props) {
 
   const onFinish = async (values: any) => {
     if (!dataUser?.id) {
-      await createUser(values)
-      toast.success('Thêm người dùng thành công!')
+      await createClinic(values)
+      toast.success('Thêm phòng khám thành công!')
     } else {
       await updateUser({
         ...values,
         id: dataUser.id
       })
-      toast.success('Update người dùng thành công!')
+      toast.success('Update phòng khám thành công!')
     }
   }
   const onFinishFailed = (errorInfo: any) => {
@@ -54,24 +54,17 @@ export default function ClinicCreate({ dataUser }: Props) {
         autoComplete='off'
       >
         <Form.Item
-          label='User name'
-          name='userName'
-          rules={[{ required: true, message: 'Please input your User name!' }]}
+          label='Tên phòng khám'
+          name='clinicName'
+          rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Please input your Email!' }]}>
+        <Form.Item label='Điện thoại' name='phone' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
           <Input />
         </Form.Item>
-        <Form.Item label='Phone' name='phone' rules={[{ required: true, message: 'Please input your phone!' }]}>
+        <Form.Item label='Địa chỉ' name='address' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
           <Input />
-        </Form.Item>
-        <Form.Item
-          label='Password'
-          name='password'
-          rules={[{ required: true, message: 'Please input your Password!' }]}
-        >
-          <Input.Password />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

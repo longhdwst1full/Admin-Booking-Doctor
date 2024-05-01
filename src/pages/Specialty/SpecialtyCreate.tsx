@@ -13,7 +13,7 @@ const SpecialtyCreate = ({ dataEdit }: Props) => {
 
   useEffect(() => {
     if (dataEdit && dataEdit.id) {
-      form.setFieldsValue(dataEdit)
+      form.setFieldValue("specialtyName",dataEdit.specialtyName)
     }
   }, [form, dataEdit])
 

@@ -1,29 +1,28 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { RootState } from '~/store/store'
-import { IAddDoctor, IGellAllDoctor, IPostDoctorResponse } from '~/types/doctor.type'
-import { IUserDocs } from '~/types/user.type'
-
+import { IAddDoctor, IDoctor, IGellAllDoctor, IPostDoctorResponse } from '~/types/doctor.type'
+ 
 export const doctorApi = createApi({
   reducerPath: 'doctorApi',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API + '/Doctors',
     credentials: 'include',
-    prepareHeaders: (headers, { getState }) => {
-      const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
+  //   prepareHeaders: (headers, { getState }) => {
+  //     const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
 
-      if (accessToken) {
-        headers.set('authorization', `Bearer ${accessToken}`)
-      }
-      return headers
-    }
+  //     if (accessToken) {
+  //       headers.set('authorization', `Bearer ${accessToken}`)
+  //     }
+  //     return headers
+  //   }
   }),
   tagTypes: ['Doctor'],
   endpoints: (builder) => ({
-    getAllDoctors: builder.query<IGellAllDoctor, void>({
+    getAllDoctors: builder.query<IGellAllDoctor[], void>({
       query: () => `/`,
       providesTags: ['Doctor']
     }),
-    getDoctor: builder.query<IUserDocs, void>({
+    getDoctor: builder.query<IDoctor, void>({
       query: (id) => `/${id}`,
       providesTags: ['Doctor']
     }),

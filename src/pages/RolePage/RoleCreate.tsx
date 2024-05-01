@@ -1,15 +1,15 @@
 import { Button, Form, Input } from 'antd'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { useAddUserMutation, useUpdateUserMutation } from '~/store/services/Users/user.service'
+import { useAddRoleMutation, useUpdateRoleMutation } from '~/store/services/role.service'
 
 interface Props {
   dataEdit?: any
 }
 
 export default function RoleCreate({ dataEdit }: Props) {
-  const [createUser, { isLoading, isError: errAdd, data }] = useAddUserMutation()
-  const [updateUser, { isError: errUpdate }] = useUpdateUserMutation()
+  const [createUser, { isLoading, isError: errAdd, data }] = useAddRoleMutation()
+  const [updateUser, { isError: errUpdate }] = useUpdateRoleMutation()
   const [form] = Form.useForm()
 
   useEffect(() => {
@@ -27,13 +27,13 @@ export default function RoleCreate({ dataEdit }: Props) {
   const onFinish = async (values: any) => {
     if (!dataEdit?.id) {
       await createUser(values)
-      toast.success('Thêm người dùng thành công!')
+      toast.success('Thêm quyền thành công!')
     } else {
       await updateUser({
         ...values,
         id: dataEdit.id
       })
-      toast.success('Update người dùng thành công!')
+      toast.success('Update quyền thành công!')
     }
   }
   const onFinishFailed = (errorInfo: any) => {
@@ -53,25 +53,8 @@ export default function RoleCreate({ dataEdit }: Props) {
         onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        <Form.Item
-          label='User name'
-          name='userName'
-          rules={[{ required: true, message: 'Please input your User name!' }]}
-        >
+        <Form.Item label='Tên quyền' name='name' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
           <Input />
-        </Form.Item>
-        <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Please input your Email!' }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item label='Phone' name='phone' rules={[{ required: true, message: 'Please input your phone!' }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label='Password'
-          name='password'
-          rules={[{ required: true, message: 'Please input your Password!' }]}
-        >
-          <Input.Password />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

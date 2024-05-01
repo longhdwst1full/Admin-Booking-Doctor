@@ -13,7 +13,7 @@ export default function SpecialtyPage() {
 
   const handleGetUser = (id: string) => {
     const user = dataSpecialty?.find((item) => item?.id == id)
-    user ? setDataEdit(user) : toast.error('Không tìm thấy người dùng')
+    user ? setDataEdit(user) : toast.error('Không tìm thấy phòng khám')
   }
 
   const dataSource = dataSpecialty?.map((items: any, index: number) => {
@@ -67,7 +67,7 @@ export default function SpecialtyPage() {
 
       <Table dataSource={dataSource} columns={columns} />
       <Drawer
-        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} người dùng`}
+        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} phòng khám`}
         placement='right'
         width={700}
         onClose={() => setOpenDrawer(!openDrawer)}
