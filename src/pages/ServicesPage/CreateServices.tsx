@@ -32,18 +32,18 @@ export default function CreateServices({ dataProp }: Props) {
       cost: Number(values.password),
       description: values.description
     }
-    if (!dataProp.id) {
+    if (!dataProp?.id) {
       axios
         .post('https://localhost:7212/api/Services', dataBody)
         .then((items: any) => {
-          window.location.href = '/manager/products'
+          window.location.href = '/manager/services'
         })
         .catch((e) => console.log(e))
     } else {
       axios
         .put('https://localhost:7212/api/Services/' + dataProp.id, dataBody)
         .then((items: any) => {
-          window.location.href = '/manager/products'
+          window.location.href = '/manager/services'
         })
         .catch((e) => console.log(e))
     }
