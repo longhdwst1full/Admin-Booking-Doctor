@@ -10,7 +10,7 @@ export default function AppointmentPage() {
   const navigate = useNavigate()
   const [dataSpecialty, setDataSpecialty] = useState([])
   const handelFetchData = async () => {
-    const { data } = await axios.get('https://localhost:7212/api/Services')
+    const { data } = await axios.get('http://localhost:7212/api/Services')
     setDataSpecialty(data)
   }
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function AppointmentPage() {
               onClick={() => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
                   axios
-                    .delete('https://localhost:7212/api/Services/' + key)
+                    .delete('http://localhost:7212/api/Services/' + key)
                     .then(() => {
                       handelFetchData()
                     })

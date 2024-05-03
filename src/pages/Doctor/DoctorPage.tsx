@@ -8,17 +8,22 @@ import { useDeleteDoctorMutation, useGetAllDoctorsQuery } from '~/store/services
 
 export default function DoctorPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
-
+  const [dataSpecialty, setdataSpecialty] = useState([])
   const navigate = useNavigate()
-
-  const { data: dataSpecialty } = useGetAllDoctorsQuery()
+  const fetch = async () => {
+    const { data } = await axios.get('http://localhost:7212/api/Doctors')
+    setdataSpecialty(data)
+  }
+  useEffect(() => {
+    fetch()
+  }, [])
   const [deleteDoctor] = useDeleteDoctorMutation()
 
   const dataSource = dataSpecialty?.map((items: any, index: number) => {
     return {
       stt: index + 1,
-      key: items.specialtyID,
-      name: items.specialtyName
+      key: items.id,
+      name: items.doctorName
     }
   })
   const columns = [
@@ -47,7 +52,8 @@ export default function DoctorPage() {
             <Button
               onClick={async () => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
-                  deleteDoctor(key)
+                  await axios.delete('http://localhost:7212/api/Doctors/' + key)
+                  fetch()
                 }
               }}
             >
@@ -58,7 +64,6 @@ export default function DoctorPage() {
       }
     }
   ]
-
   return (
     <div>
       <Breadcrumb pageName='Bác sĩ' openDrawer={() => setOpenDrawer(true)} />

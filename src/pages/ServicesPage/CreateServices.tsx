@@ -13,7 +13,7 @@ export default function CreateServices({ dataProp }: Props) {
 
   useEffect(() => {
     const handelGetIdService = async () => {
-      const { data } = await axios.get('https://localhost:7212/api/Services/' + dataProp.id)
+      const { data } = await axios.get('http://localhost:7212/api/Services/' + dataProp.id)
       console.log(data, 'pl')
       setDataService(data)
     }
@@ -34,14 +34,14 @@ export default function CreateServices({ dataProp }: Props) {
     }
     if (!dataProp?.id) {
       axios
-        .post('https://localhost:7212/api/Services', dataBody)
+        .post('http://localhost:7212/api/Services', dataBody)
         .then((items: any) => {
           window.location.href = '/manager/services'
         })
         .catch((e) => console.log(e))
     } else {
       axios
-        .put('https://localhost:7212/api/Services/' + dataProp.id, dataBody)
+        .put('http://localhost:7212/api/Services/' + dataProp.id, dataBody)
         .then((items: any) => {
           window.location.href = '/manager/services'
         })

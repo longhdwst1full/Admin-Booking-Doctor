@@ -1,20 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { RootState } from '~/store/store'
 import { IAddDoctor, IDoctor, IGellAllDoctor, IPostDoctorResponse } from '~/types/doctor.type'
- 
+
 export const doctorApi = createApi({
   reducerPath: 'doctorApi',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API + '/Doctors',
     credentials: 'include',
-  //   prepareHeaders: (headers, { getState }) => {
-  //     const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
-
-  //     if (accessToken) {
-  //       headers.set('authorization', `Bearer ${accessToken}`)
-  //     }
-  //     return headers
-  //   }
+    prepareHeaders: (headers, { getState }) => {
+  
+    }
   }),
   tagTypes: ['Doctor'],
   endpoints: (builder) => ({
