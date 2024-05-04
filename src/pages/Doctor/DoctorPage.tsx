@@ -12,7 +12,7 @@ export default function DoctorPage() {
   const [dataDoctor, setdataDoctor] = useState<IDoctor[]>([])
   const [dataEdit, setdataEdit] = useState<IDoctor>()
 
-  const {   postCaller, putCaller } = useSevices()
+  const { postCaller, putCaller } = useSevices()
 
   const fetch = async () => {
     const { data } = await axios.get('http://localhost:7212/api/Doctors')
@@ -24,14 +24,16 @@ export default function DoctorPage() {
   const handleGetdataRole = (id: string) => {
     const user = dataDoctor?.find((item) => item.id === +id)
     user ? setdataEdit(user) : toast.error('Không tìm thấy bác sĩ')
+    setOpenDrawer(true)
   }
 
   const onFinish = async (values: any) => {
     if (!dataEdit?.id) {
       await postCaller('Doctors', values)
     } else {
-      await putCaller('Doctors', { ...values, id: dataEdit?.id })
+      await putCaller('Doctors/' + dataEdit.id, { ...values })
     }
+    setOpenDrawer(false)
   }
 
   const dataSource = dataDoctor?.map((items, index) => {

@@ -7,20 +7,19 @@ interface Props {
   dataDoctor?: IDoctor
   onFinish: (values: any) => Promise<void>
 }
-const DoctorCreate = ({ dataDoctor , onFinish}: Props) => {
+const DoctorCreate = ({ dataDoctor, onFinish }: Props) => {
   const [form] = Form.useForm()
-   
+
   const { data: dataSpecicaly } = useGetAllSpecialtyQuery()
-   
+
   useEffect(() => {
     if (dataDoctor && dataDoctor.id) {
-      form.setFieldValue('password', dataDoctor.password)
+      form.setFieldValue('password', (dataDoctor as any)?.password)
       form.setFieldValue('doctorName', dataDoctor.doctorName)
       form.setFieldValue('email', dataDoctor.email)
       form.setFieldValue('specialtyID', dataDoctor.specialty)
     }
   }, [dataDoctor, form])
-
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
@@ -53,7 +52,7 @@ const DoctorCreate = ({ dataDoctor , onFinish}: Props) => {
           <Select
             placeholder='Chọn chuyên khoa'
             options={dataSpecicaly?.map((item) => ({
-              value: item.id,
+              value: item.specialtyID,
               label: item.specialtyName
             }))}
           />
@@ -61,11 +60,10 @@ const DoctorCreate = ({ dataDoctor , onFinish}: Props) => {
         <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
           <Input type='email' />
         </Form.Item>
-      
-          <Form.Item label='Mật khẩu' name='password' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
-            <Input.Password />
-          </Form.Item>
-      
+
+        <Form.Item label='Mật khẩu' name='password' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+          <Input.Password />
+        </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type='primary' htmlType='submit'>

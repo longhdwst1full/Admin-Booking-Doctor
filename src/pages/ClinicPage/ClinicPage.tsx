@@ -7,7 +7,6 @@ import { useSevices } from '~/configs/useSevice'
 import { IClinic } from '~/types/clinic.type'
 import ClinicCreate from './ClinicCreate'
 import dayjs from 'dayjs'
-import { render } from 'react-dom'
 
 export default function ClinicPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
