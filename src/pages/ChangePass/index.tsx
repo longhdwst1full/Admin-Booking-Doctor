@@ -1,7 +1,8 @@
 import { Button, Form, Input, message } from 'antd'
 
-import { useEffect, useState } from 'react'
-import { useAppSelector } from '~/store/hooks'
+import { useState } from 'react'
+import { getToken } from '~/configs/token'
+import { useSevices } from '~/configs/useSevice'
 import { useLogOutMutation } from '~/store/services/Auth/auth'
 
 type FieldType = {
@@ -11,10 +12,9 @@ type FieldType = {
 }
 
 export default function ChangePassword() {
-  const [updatePasswordFn, updatePasswordRes] = useUpdatePasswordMutation()
-  const { user } = useAppSelector((state) => state.persistedReducer.auth)
   const [logout] = useLogOutMutation()
-
+  const { postCaller } = useSevices()
+  const dataAuth = getToken()
   const [avatar, _] = useState<{ file: File | undefined; base64: string | ArrayBuffer | null }>({
     file: undefined,
     base64: ''
@@ -22,25 +22,17 @@ export default function ChangePassword() {
 
   const handleFinish = async (data: FieldType) => {
     if (data) {
-      updatePasswordFn({
-        password: data.password,
-        passwordNew: data.passwordNew
+      console.log(data)
+      postCaller(`User/update/passWord/${dataAuth?.id}`, {
+        password: data.password
       })
+        .then(() => {
+          message.success('Đổi mật khẩu thành công!')
+          logout()
+        })
+        .catch((error) => message.error(error))
     }
   }
-
-  useEffect(() => {
-    if (updatePasswordRes.isError && updatePasswordRes.error) {
-      message.error((updatePasswordRes.error as any)?.data?.message)
-    }
-
-    if (updatePasswordRes.isSuccess) {
-      message.success('Đổi mật khẩu thành công!')
-      logout()
-        .unwrap()
-        .then(() => {})
-    }
-  }, [logout, updatePasswordRes])
 
   return (
     <div className='flex-1'>
@@ -49,7 +41,7 @@ export default function ChangePassword() {
       </div>
       <div className='mt-[70px] border border-[#E5E7EB] shadow-md w-full rounded-md'>
         <div className='account-avatar h-[120px] ml-[calc(45%-60px)] w-[120px] mt-[-60px] bg-[#fff] rounded-full border-[5px] border-white overflow-hidden'>
-          <img className='w-full h-full object-cover' src={String(avatar.base64) || user?.avatar} />
+          <img className='w-full h-full object-cover' src={String(avatar.base64) || (dataAuth && dataAuth?.avatar)} />
         </div>
         <Form<FieldType>
           name='basic'
@@ -116,7 +108,4 @@ export default function ChangePassword() {
       </div>
     </div>
   )
-}
-function useUpdatePasswordMutation(): [any, any] {
-  throw new Error('Function not implemented.')
 }

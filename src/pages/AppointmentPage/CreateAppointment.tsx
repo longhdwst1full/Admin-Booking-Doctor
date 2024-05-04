@@ -1,52 +1,49 @@
-import { Button, Form, Input } from 'antd'
+import { Button, DatePicker, Form, Input, Select } from 'antd'
 import axios from 'axios'
+import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
+import { IClinic } from '~/types/clinic.type'
+import { IDoctor } from '~/types/doctor.type'
+import { IUsers } from '~/types/user.type'
 
 interface Props {
-  dataProp?: any
+  dataEdit?: any
+  onFinish: (values: any) => Promise<void>
 }
 
-export default function CreateAppointment({ dataProp }: Props) {
+export default function CreateAppointment({ dataEdit, onFinish }: Props) {
   const [form] = Form.useForm()
-  const [dataSevice, setDataService] = useState<any>()
-
+  const [dataSevice, setDataService] = useState<any[]>()
+  const [dataUser, setDataUser] = useState<IUsers[]>()
+  const [dataDoctor, setDataDoctor] = useState<IDoctor[]>()
+  const [clinic, setDataClinic] = useState<IClinic[]>()
+  const [disabledDate, setDataDisabled] = useState<boolean>(false)
   useEffect(() => {
     const handelGetIdService = async () => {
-      const { data } = await axios.get('http://localhost:7212/api/Services/' + dataProp.id)
+      const { data } = await axios.get('http://localhost:7212/api/Services')
+      const { data: dataUser } = await axios.get('http://localhost:7212/api/User')
+      const { data: clinics } = await axios.get('http://localhost:7212/api/Clinics')
+      const { data: doctors } = await axios.get('http://localhost:7212/api/Doctors')
       console.log(data, 'pl')
       setDataService(data)
+      setDataDoctor(doctors)
+      setDataUser(dataUser)
+      setDataClinic(clinics)
     }
     handelGetIdService()
   }, [])
+
   useEffect(() => {
-    form.setFieldsValue({
-      username: dataSevice?.serviceName,
-      password: dataSevice?.cost,
-      description: dataSevice?.description
-    })
+    if (dataEdit) {
+      form.setFieldValue('userID', dataEdit.userID)
+      form.setFieldValue('doctorID', dataEdit.doctorID)
+      form.setFieldValue('clinicID', dataEdit.clinicID)
+      form.setFieldValue('appointmentDate', dataEdit.appointmentDate)
+      form.setFieldValue('serviceIDs', dataEdit.serviceIDs)
+      form.setFieldValue('status', dataEdit.status)
+      setDataDisabled(true)
+    }
   }, [form, dataSevice])
-  const onFinish = (values: any) => {
-    var dataBody = {
-      serviceName: values.username,
-      cost: Number(values.password),
-      description: values.description
-    }
-    if (!dataProp.id) {
-      axios
-        .post('http://localhost:7212/api/Services', dataBody)
-        .then((items: any) => {
-          window.location.href = '/manager/products'
-        })
-        .catch((e) => console.log(e))
-    } else {
-      axios
-        .put('http://localhost:7212/api/Services/' + dataProp.id, dataBody)
-        .then((items: any) => {
-          window.location.href = '/manager/products'
-        })
-        .catch((e) => console.log(e))
-    }
-  }
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
@@ -65,27 +62,111 @@ export default function CreateAppointment({ dataProp }: Props) {
         onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        <Form.Item
-          label='serviceName'
-          name='username'
-          rules={[{ required: true, message: 'Please input your serviceName!' }]}
-        >
-          <Input />
+        {/* user */}
+        <Form.Item label='Người đặt' name='userID' rules={[{ required: true, message: 'Required!' }]}>
+          <Select
+            showSearch
+            disabled={disabledDate}
+            style={{ width: 200 }}
+            placeholder='Search to Select'
+            optionFilterProp='children'
+            filterOption={(input, option) => (option?.label ?? '').includes(input)}
+            filterSort={(optionA, optionB) =>
+              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+            }
+            options={dataUser?.map((item) => ({
+              value: item.id,
+              label: item.userName
+            }))}
+          />
+        </Form.Item>
+        {/* doctorId */}
+        <Form.Item label='Bác sĩ' name='doctorID' rules={[{ required: true, message: 'Required!' }]}>
+          <Select
+            showSearch
+            disabled={disabledDate}
+            style={{ width: 200 }}
+            placeholder='Search to Select'
+            optionFilterProp='children'
+            filterOption={(input, option) => (option?.label ?? '').includes(input)}
+            filterSort={(optionA, optionB) =>
+              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+            }
+            options={dataDoctor?.map((item) => ({
+              value: item.id,
+              label: item.doctorName
+            }))}
+          />
+        </Form.Item>
+        {/*clinicID  */}
+        <Form.Item label='Phòng khám' name='userID' rules={[{ required: true, message: 'Required!' }]}>
+          <Select
+            showSearch
+            disabled={disabledDate}
+            style={{ width: 200 }}
+            placeholder='Search to Select'
+            optionFilterProp='children'
+            filterOption={(input, option) => (option?.label ?? '').includes(input)}
+            filterSort={(optionA, optionB) =>
+              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+            }
+            options={clinic?.map((item) => ({
+              value: item.clinicID,
+              label: item.clinicName
+            }))}
+          />
+        </Form.Item>
+        {/* serviceIDs */}
+        <Form.Item label='Dịch vụ' name='userID' rules={[{ required: true, message: 'Required!' }]}>
+          <Select
+            mode='multiple'
+            showSearch
+            disabled={disabledDate}
+            style={{ width: 200 }}
+            placeholder='Search to Select'
+            optionFilterProp='children'
+            filterOption={(input, option) => (option?.label ?? '').includes(input)}
+            filterSort={(optionA, optionB) =>
+              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+            }
+            options={dataSevice?.map((item) => ({
+              value: `${item.id}}`,
+              label: item.userName
+            }))}
+          />
+        </Form.Item>
+        {/* status */}
+        <Form.Item label='Trạng thái' name='status' rules={[{ required: true, message: 'Required!' }]}>
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder='Search to Select'
+            optionFilterProp='children'
+            filterOption={(input, option) => (option?.label ?? '').includes(input)}
+            filterSort={(optionA, optionB) =>
+              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+            }
+            options={[
+              {
+                value: '0',
+                label: '0'
+              }
+            ]}
+          />
+        </Form.Item>
+        {/* date */}
+        <Form.Item label='Hẹn ngày' name='appointmentDate' rules={[{ required: true, message: 'Required!' }]}>
+          <DatePicker
+            disabled={disabledDate}
+            disabledDate={(current) =>
+              dayjs().subtract(1, 'day').isAfter(current) || dayjs().add(1, 'month').isBefore(current)
+            }
+          />
         </Form.Item>
 
-        <Form.Item label='cost' name='password' rules={[{ required: true, message: 'Please input your cost!' }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label='description'
-          name='description'
-          rules={[{ required: true, message: 'Please input your description!' }]}
-        >
-          <Input />
-        </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type='primary' htmlType='submit'>
-            Submit
+            Lưu
           </Button>
         </Form.Item>
       </Form>

@@ -52,15 +52,7 @@ const routers = createBrowserRouter([
       }
     ]
   },
-  {
-    path: '/settings',
-    children: [
-      {
-        element: <GuardAccount JSX={DefaultLayout} />,
-        children: [{ index: true, element: 'settings' }]
-      }
-    ]
-  },
+  
   {
     path: '/profile',
     children: [

@@ -1,27 +1,60 @@
 import { Button, Drawer, Table } from 'antd'
-import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
+import { useSevices } from '~/configs/useSevice'
+import { IAppointment } from '~/types/appointment'
 import CreateAppointment from './CreateAppointment'
 
 export default function AppointmentPage() {
+  const [dataEdit, setDataEdit] = useState<IAppointment>()
   const [openDrawer, setOpenDrawer] = useState(false)
-  const navigate = useNavigate()
-  const [dataSpecialty, setDataSpecialty] = useState([])
-  const handelFetchData = async () => {
-    const { data } = await axios.get('http://localhost:7212/api/Services')
-    setDataSpecialty(data)
+
+  const [dataAppointment, setDataAppointment] = useState<IAppointment[]>()
+  const [dataUserBooking, setDataUserBooking] = useState<IAppointment[]>()
+  const [dataDoctorAppointment, setDataDoctorAppointment] = useState<IAppointment[]>()
+  const { getCaller, postCaller } = useSevices()
+
+  const handleGetData = async (userId?: string, doctorId?: string) => {
+    const data = await getCaller<IAppointment[]>('/Appointments')
+    const dataUserBooking = await getCaller<IAppointment[]>(`/Appointments/${userId}/bookings`)
+    const dataDoctorAppointment = await getCaller<IAppointment[]>(`/Appointments/${doctorId}/selected-users`)
+    if (data || dataUserBooking || dataDoctorAppointment) {
+      setDataAppointment(data.data)
+      setDataDoctorAppointment(dataDoctorAppointment.data)
+      setDataUserBooking(dataUserBooking.data)
+    }
+  }
+  const handleGetdataEdit = (id: string) => {
+    const user = dataAppointment?.find((item) => item.appointmentId === +id)
+    user ? setDataEdit(user) : toast.error('Không tìm thấy quyền')
   }
   useEffect(() => {
-    handelFetchData()
+    handleGetData()
   }, [])
-  const dataSource = dataSpecialty.map((items: any, index: number) => {
+
+  const onFinish = async (values: any) => {
+    if (!dataEdit?.appointmentId) {
+      await postCaller('/Appointments', values)
+      toast.success('Thêm cuộc hẹn thành công!')
+    } else {
+      await postCaller(`/Appointments/update/${dataEdit.appointmentId}`, {
+        status: values.status
+      })
+      toast.success('Update cuộc hẹn thành công!')
+    }
+    await handleGetData()
+  }
+  const dataSource = dataAppointment?.map((items, index: number) => {
     return {
       stt: index + 1,
-      key: items.serviceId,
-      name: items.serviceName,
-      description: items.description,
+      key: items.appointmentId,
+      userName: items.userName,
+      doctorName: items.doctorName,
+      appointmentDate: items.appointmentDate,
+      clinicName: items.clinicName,
+      status: items.status,
+      service: items.service,
       cost: items.cost
     }
   })
@@ -32,19 +65,39 @@ export default function AppointmentPage() {
       key: 'stt'
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name'
+      title: 'Bác sĩ',
+      dataIndex: 'doctorName',
+      key: 'doctorName'
     },
     {
-      title: 'cost',
+      title: 'Khách hàng',
+      dataIndex: 'userName',
+      key: 'userName'
+    },
+    {
+      title: 'Phòng khám',
+      dataIndex: 'clinicName',
+      key: 'clinicName'
+    },
+    {
+      title: 'Ngày',
+      dataIndex: 'appointmentDate',
+      key: 'appointmentDate'
+    },
+    {
+      title: 'Giá',
       dataIndex: 'cost',
       key: 'cost'
     },
     {
-      title: 'description',
-      dataIndex: 'description',
-      key: 'description'
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status'
+    },
+    {
+      title: 'Dịch vụ',
+      dataIndex: 'service',
+      key: 'service'
     },
     {
       render: ({ key }: any) => {
@@ -52,12 +105,12 @@ export default function AppointmentPage() {
           <div className='space-x-5'>
             <Button
               onClick={() => {
-                navigate('/manager/products/create?id=' + key)
+                handleGetdataEdit(key)
               }}
             >
               Edit
             </Button>
-            <Button
+            {/* <Button
               onClick={() => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
                   axios
@@ -70,7 +123,7 @@ export default function AppointmentPage() {
               }}
             >
               Delete
-            </Button>
+            </Button> */}
           </div>
         )
       }
@@ -83,13 +136,13 @@ export default function AppointmentPage() {
 
       <Table dataSource={dataSource} columns={columns} />
       <Drawer
-        title={`${true ? 'Thêm' : 'Cập nhật'} sản phẩm`}
+        title={`${true ? 'Thêm' : 'Cập nhật'} cuộc hẹn`}
         placement='right'
         width={700}
         onClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
-        <CreateAppointment />
+        <CreateAppointment onFinish={onFinish} dataEdit={dataEdit} />
       </Drawer>
     </div>
   )

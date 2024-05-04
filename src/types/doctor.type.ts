@@ -1,4 +1,3 @@
-import { IAppointmentHistory } from './appointment'
 
 export interface IAddDoctor {
   specialtyID: string
@@ -23,7 +22,7 @@ export interface IPostDoctorResponse {
 export interface IDoctor {
   id: number
   doctorName: string
-
+  email: string
   specialty: string
 
 }
