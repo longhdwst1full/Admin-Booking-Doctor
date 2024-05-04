@@ -1,7 +1,8 @@
 import { Button, Form, Input, Select } from 'antd'
-import { useEffect } from 'react'
-import { useGetAllSpecialtyQuery } from '~/store/services/specialty'
+import { useEffect, useState } from 'react'
+import { useSevices } from '~/configs/useSevice'
 import { IDoctor } from '~/types/doctor.type'
+import { ISpecialty } from '~/types/specialties.type'
 
 interface Props {
   dataDoctor?: IDoctor
@@ -9,9 +10,16 @@ interface Props {
 }
 const DoctorCreate = ({ dataDoctor, onFinish }: Props) => {
   const [form] = Form.useForm()
+  const { getCaller } = useSevices()
+  const [dataSpecicaly, setdataSpecicaly] = useState<ISpecialty[]>([])
 
-  const { data: dataSpecicaly } = useGetAllSpecialtyQuery()
-
+  const fetch = async () => {
+    const { data } = await getCaller<ISpecialty[]>('Specialty')
+    data && setdataSpecicaly(data)
+  }
+  useEffect(() => {
+    fetch()
+  }, [])
   useEffect(() => {
     if (dataDoctor && dataDoctor.id) {
       form.setFieldValue('password', (dataDoctor as any)?.password)

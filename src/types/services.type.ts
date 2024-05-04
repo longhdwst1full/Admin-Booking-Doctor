@@ -6,5 +6,6 @@ export interface ICreateServices {
 export interface IServices {
   serviceName: string
   cost: any
+  serviceId: string
   description: string
 }

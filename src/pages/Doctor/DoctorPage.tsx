@@ -34,6 +34,7 @@ export default function DoctorPage() {
       await putCaller('Doctors/' + dataEdit.id, { ...values })
     }
     setOpenDrawer(false)
+    await fetch()
   }
 
   const dataSource = dataDoctor?.map((items, index) => {
@@ -70,7 +71,7 @@ export default function DoctorPage() {
               onClick={async () => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
                   await axios.delete('http://localhost:7212/api/Doctors/' + key)
-                  fetch()
+                  await fetch()
                 }
               }}
             >

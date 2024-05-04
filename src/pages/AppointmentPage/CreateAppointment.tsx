@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { IClinic } from '~/types/clinic.type'
 import { IDoctor } from '~/types/doctor.type'
+import { IServices } from '~/types/services.type'
 import { IUsers } from '~/types/user.type'
 
 interface Props {
@@ -13,7 +14,7 @@ interface Props {
 
 export default function CreateAppointment({ dataEdit, onFinish }: Props) {
   const [form] = Form.useForm()
-  const [dataSevice, setDataService] = useState<any[]>()
+  const [dataSevice, setDataService] = useState<IServices[]>()
   const [dataUser, setDataUser] = useState<IUsers[]>()
   const [dataDoctor, setDataDoctor] = useState<IDoctor[]>()
   const [clinic, setDataClinic] = useState<IClinic[]>()
@@ -99,7 +100,7 @@ export default function CreateAppointment({ dataEdit, onFinish }: Props) {
           />
         </Form.Item>
         {/*clinicID  */}
-        <Form.Item label='Phòng khám' name='userID' rules={[{ required: true, message: 'Required!' }]}>
+        <Form.Item label='Phòng khám' name='clinicID' rules={[{ required: true, message: 'Required!' }]}>
           <Select
             showSearch
             disabled={disabledDate}
@@ -117,7 +118,7 @@ export default function CreateAppointment({ dataEdit, onFinish }: Props) {
           />
         </Form.Item>
         {/* serviceIDs */}
-        <Form.Item label='Dịch vụ' name='userID' rules={[{ required: true, message: 'Required!' }]}>
+        <Form.Item label='Dịch vụ' name='serviceIDs' rules={[{ required: true, message: 'Required!' }]}>
           <Select
             mode='multiple'
             showSearch
@@ -130,8 +131,8 @@ export default function CreateAppointment({ dataEdit, onFinish }: Props) {
               (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
             }
             options={dataSevice?.map((item) => ({
-              value: `${item.id}}`,
-              label: item.userName
+              value: `${item.serviceId}`,
+              label: item.serviceName
             }))}
           />
         </Form.Item>

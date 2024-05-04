@@ -35,7 +35,7 @@ export default function AppointmentPage() {
 
   const onFinish = async (values: any) => {
     if (!dataEdit?.appointmentId) {
-      await postCaller('/Appointments', values)
+      await postCaller('/Appointments/' + values.userID, values)
       toast.success('Thêm cuộc hẹn thành công!')
     } else {
       await postCaller(`/Appointments/update/${dataEdit.appointmentId}`, {

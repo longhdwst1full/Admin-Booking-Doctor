@@ -1,31 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { MdLockOutline } from 'react-icons/md'
 import { useEffect, useRef, useState } from 'react'
+import { MdLockOutline } from 'react-icons/md'
 
-import { Link } from 'react-router-dom'
-import { RootState } from '~/store/store'
-import { useAppSelector } from '~/store/hooks'
 import toast from 'react-hot-toast'
+import { Link, useNavigate } from 'react-router-dom'
 import ArrowDown from '~/components/Icons/ArrowDown'
 import ProfileIcon from '~/components/Icons/ProfileIcon'
-import { useLogOutMutation } from '~/store/services/Auth/auth'
+import { useAppSelector } from '~/store/hooks'
+import { RootState } from '~/store/store'
+import { removeAuthLocalData } from '~/configs/token'
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-
+  const navigate = useNavigate()
   const trigger = useRef<any>(null)
   const dropdown = useRef<any>(null)
 
-  const [logout] = useLogOutMutation()
   const onLogout = () => {
-    logout()
-      .unwrap()
-      .then(() => {
-        toast.success('Đăng xuất thành công')
-      })
-      .catch(() => toast.error('Đăng xuất thất bại'))
+    removeAuthLocalData()
+    toast.success('Đăng xuất thành công')
+    navigate('/')
   }
 
   // close on click outside

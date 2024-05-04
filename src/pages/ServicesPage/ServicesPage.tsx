@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 import CreateServices from './CreateServices'
+import { IServices } from '~/types/services.type'
+import toast from 'react-hot-toast'
 
 export default function ServicesPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
-  const navigate = useNavigate()
-  const [dataSpecialty, setDataSpecialty] = useState([])
+  const [dataEdit, setDataEdit] = useState<IServices>()
+
+  const [dataSpecialty, setDataSpecialty] = useState<IServices[]>([])
   const handelFetchData = async () => {
     const { data } = await axios.get('http://localhost:7212/api/Services')
     setDataSpecialty(data)
@@ -16,6 +19,18 @@ export default function ServicesPage() {
   useEffect(() => {
     handelFetchData()
   }, [])
+
+  const handleGetUser = (id: string) => {
+    const user = dataSpecialty?.find((item) => item?.serviceId == id)
+    console.log(id, user)
+    if (user) {
+      setDataEdit(user)
+      setOpenDrawer(true)
+    } else {
+      toast.error('Không tìm thấy dịch vụ')
+    }
+  }
+
   const dataSource = dataSpecialty.map((items: any, index: number) => {
     return {
       stt: index + 1,
@@ -52,7 +67,7 @@ export default function ServicesPage() {
           <div className='space-x-5'>
             <Button
               onClick={() => {
-                navigate('/manager/products/create?id=' + key)
+                handleGetUser(key)
               }}
             >
               Edit
@@ -89,7 +104,7 @@ export default function ServicesPage() {
         onClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
-        <CreateServices />
+        <CreateServices dataEdit={dataEdit} />
       </Drawer>
     </div>
   )

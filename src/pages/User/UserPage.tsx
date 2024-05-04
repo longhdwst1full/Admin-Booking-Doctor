@@ -33,11 +33,11 @@ export default function UserPage() {
         email: values.email,
         phone: values.phone
       })
-      if (dataEdit.roleName !== values.roleName) {
-        await postCaller(`User/update/role-user/${dataEdit.id}`, {
-          userId: 0
-        })
-      }
+      // if (dataEdit.roleName !== values.roleName) {
+      //   await postCaller(`User/update/role-user/${dataEdit.id}`, {
+      //     userId: 0
+      //   })
+      // }
       if (values.passWord) {
         await postCaller(`User/update/passWord/${dataEdit.id}`, {
           passWord: values.passWord
@@ -45,6 +45,7 @@ export default function UserPage() {
       }
       toast.success('Update người dùng thành công!')
     }
+    await handleGetData()
     setOpenDrawer(false)
   }
   const dataSource = dataRoles?.map((items, index) => {
@@ -62,6 +63,7 @@ export default function UserPage() {
   const handleGetUser = (id: string) => {
     const user = dataRoles?.find((item) => item.id == id)
     user ? setDataEdit(user) : toast.error('Không tìm thấy người dùng')
+    setOpenDrawer(true)
   }
   const columns = [
     {
@@ -74,11 +76,11 @@ export default function UserPage() {
       dataIndex: 'name',
       key: 'name'
     },
-    {
-      title: 'Avatar',
-      dataIndex: 'avatar',
-      key: 'avatar'
-    },
+    // {
+    //   title: 'Avatar',
+    //   dataIndex: 'avatar',
+    //   key: 'avatar'
+    // },
     {
       title: 'Email',
       dataIndex: 'email',
@@ -107,9 +109,10 @@ export default function UserPage() {
               Edit
             </Button>
             <Button
-              onClick={() => {
+              onClick={async() => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
-                  deleteCaller(`/User/${key}`)
+                await  deleteCaller(`/User/${key}`)
+                await handleGetData()
                 }
               }}
             >

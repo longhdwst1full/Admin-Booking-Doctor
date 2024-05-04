@@ -1,7 +1,7 @@
 import { Button, Form, Input, message } from 'antd'
 
 import { useState } from 'react'
-import { getToken } from '~/configs/token'
+import { getToken, removeAuthLocalData } from '~/configs/token'
 import { useSevices } from '~/configs/useSevice'
 import { useLogOutMutation } from '~/store/services/Auth/auth'
 
@@ -11,8 +11,7 @@ type FieldType = {
   confirmPass: string
 }
 
-export default function ChangePassword() {
-  const [logout] = useLogOutMutation()
+export default function ChangePassword() { 
   const { postCaller } = useSevices()
   const dataAuth = getToken()
   const [avatar, _] = useState<{ file: File | undefined; base64: string | ArrayBuffer | null }>({
@@ -28,7 +27,7 @@ export default function ChangePassword() {
       })
         .then(() => {
           message.success('Đổi mật khẩu thành công!')
-          logout()
+          removeAuthLocalData()
         })
         .catch((error) => message.error(error))
     }

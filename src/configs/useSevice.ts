@@ -45,7 +45,7 @@ export const useSevices = () => {
       return Promise.resolve(res);
     } catch (err: any) {
 
-      return Promise.reject(err);
+      toast.error(err.message)
     }
   };
   const putCaller = async <T, R>(
@@ -71,7 +71,7 @@ export const useSevices = () => {
   const deleteCaller = async <R>(url: string, includeAuth = true) => {
 
     try {
-      const res = await http.get<R>(url, {
+      const res = await http.delete<R>(url, {
         headers: buildHeader(includeAuth),
 
       });
@@ -79,7 +79,7 @@ export const useSevices = () => {
       return Promise.resolve(res);
     } catch (err: any) {
 
-      return Promise.reject(err);
+      toast.error(err.message)
     }
   };
   const getCaller = async <R>(url: string, includeAuth = true) => {

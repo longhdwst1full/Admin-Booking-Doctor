@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 
 export default function ClinicPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
-  const [dataEdit, setDataEdit] = useState<any>()
+  const [dataEdit, setDataEdit] = useState<IClinic>()
   const [data, setData] = useState<IClinic[]>()
   const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
 
@@ -31,11 +31,11 @@ export default function ClinicPage() {
     setOpenDrawer(true)
   }
   const onFinish = async (values: any) => {
-    if (!dataEdit?.id) {
+    if (!dataEdit?.clinicID) {
       await postCaller('/Clinics', values)
       toast.success('Thêm phòng khám thành công!')
     } else {
-      await putCaller(`/Clinics/${dataEdit.id}`, {
+      await putCaller(`/Clinics/${dataEdit.clinicID}`, {
         ...values
       })
       toast.success('Update phòng khám thành công!')
@@ -51,9 +51,10 @@ export default function ClinicPage() {
         stt: index + 1,
         key: items.clinicID,
         name: items.clinicName,
+        phone: items.phone,
         address: items.address,
         appointments: items?.appointments && dayjs(items.appointments[0].appointmentDate),
-        services: items.services&&items.services[0].serviceName
+        services: items.services && items.services[0].serviceName
       }
     })
 
@@ -67,6 +68,11 @@ export default function ClinicPage() {
       title: 'Name',
       dataIndex: 'name',
       key: 'name'
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'phone'
     },
     {
       title: 'Address',
@@ -96,9 +102,9 @@ export default function ClinicPage() {
               Edit
             </Button>
             <Button
-              onClick={ () => {
+              onClick={() => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
-                   deleteCaller(`/IClinic/${key}`)
+                  deleteCaller(`/Clinics/${key}`)
                     .then(async () => {
                       toast.success('Deleted successfully')
                       await handleGetData()

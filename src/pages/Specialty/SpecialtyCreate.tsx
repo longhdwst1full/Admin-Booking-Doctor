@@ -10,7 +10,8 @@ const SpecialtyCreate = ({ dataEdit, onFinish }: Props) => {
   const [form] = Form.useForm()
 
   useEffect(() => {
-    if (dataEdit && dataEdit.specialtyID) {
+    if (dataEdit) {
+      console.log(dataEdit)
       form.setFieldValue('specialtyName', dataEdit.specialtyName)
     }
   }, [form, dataEdit])
@@ -33,7 +34,7 @@ const SpecialtyCreate = ({ dataEdit, onFinish }: Props) => {
       >
         <Form.Item
           label='Tên chuyên khoa'
-          name='username'
+          name='specialtyName'
           rules={[{ required: true, message: 'Please input your serviceName!' }]}
         >
           <Input />

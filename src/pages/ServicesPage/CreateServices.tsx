@@ -1,18 +1,19 @@
 import { Button, Form, Input } from 'antd'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { IServices } from '~/types/services.type'
 
 interface Props {
-  dataProp?: any
+  dataEdit?: IServices
 }
 
-export default function CreateServices({ dataProp }: Props) {
+export default function CreateServices({ dataEdit }: Props) {
   const [form] = Form.useForm()
   const [dataSevice, setDataService] = useState<any>()
 
   useEffect(() => {
     const handelGetIdService = async () => {
-      const { data } = await axios.get('http://localhost:7212/api/Services/' + dataProp.id)
+      const { data } = await axios.get('http://localhost:7212/api/Services/' + dataEdit?.serviceId)
       console.log(data, 'pl')
       setDataService(data)
     }
@@ -31,7 +32,7 @@ export default function CreateServices({ dataProp }: Props) {
       cost: Number(values.password),
       description: values.description
     }
-    if (!dataProp?.id) {
+    if (!dataEdit?.serviceId) {
       axios
         .post('http://localhost:7212/api/Services', dataBody)
         .then((items: any) => {
@@ -40,7 +41,7 @@ export default function CreateServices({ dataProp }: Props) {
         .catch((e) => console.log(e))
     } else {
       axios
-        .put('http://localhost:7212/api/Services/' + dataProp.id, dataBody)
+        .put('http://localhost:7212/api/Services/' + dataEdit?.serviceId, dataBody)
         .then((items: any) => {
           window.location.href = '/manager/services'
         })

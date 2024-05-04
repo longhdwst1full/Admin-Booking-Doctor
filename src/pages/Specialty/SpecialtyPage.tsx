@@ -25,6 +25,7 @@ export default function SpecialtyPage() {
 
   const handleGetUser = (id: string) => {
     const user = dataSpecialty?.find((item) => item?.specialtyID == id)
+    console.log(id, user)
     if (user) {
       setDataEdit(user)
       setOpenDrawer(true)
@@ -74,15 +75,17 @@ export default function SpecialtyPage() {
           <div className='space-x-5'>
             <Button
               onClick={() => {
+                console.log(key)
                 handleGetUser(key)
               }}
             >
               Edit
             </Button>
             <Button
-              onClick={() => {
+              onClick={async () => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
-                  deleteCaller(key)
+                  await deleteCaller(`Specialty/${key}`)
+                  await handleGetData()
                 }
               }}
             >

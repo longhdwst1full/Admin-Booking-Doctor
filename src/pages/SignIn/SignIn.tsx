@@ -1,17 +1,19 @@
 import { Login, LoginSchema } from './validate'
 
-import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import EmailIcon from '~/components/Icons/EmailIcon'
 import { Password } from '~/components/Icons/Password'
 import { PhoneIcon } from '~/components/Icons/Phone'
-import { useSignInMutation } from '~/store/services/Auth/auth'
+import { useSevices } from '~/configs/useSevice'
+import { setAuthData } from '~/configs/token'
 
 export default function SignIn() {
-  const [loginUser] = useSignInMutation()
+  const { postCaller } = useSevices()
+
   const navigate = useNavigate()
   const {
     register,
@@ -22,18 +24,15 @@ export default function SignIn() {
     resolver: yupResolver(LoginSchema)
   })
   const onLogin = (loginData: Login) => {
-    loginUser(loginData).then((data: any) => {
-      if (data.error) {
-        return toast.error(data.error.data.message)
-      } else {
-        const dataUser = data.data.user.role
-
-        dataUser == 'admin'
-          ? (navigate('/dashboard'), toast.success('Đăng nhập thành công'))
-          : dataUser == 'staff'
-          ? (navigate('/manager/orders'), toast.success('Đăng nhập thành công'))
-          : toast.error('Bạn không có quyền truy cập')
-      }
+    postCaller('Auth/login', loginData).then((data: any) => {
+      console.log(data.data, '::::')
+      const dataUser = data.data.user.role
+      setAuthData(data.data)
+      dataUser == 'admin'
+        ? (navigate('/dashboard'), toast.success('Đăng nhập thành công'))
+        : dataUser == 'doctor'
+        ? (navigate('/dashboard'), toast.success('Đăng nhập thành công'))
+        : toast.error('Bạn không có quyền truy cập')
     })
   }
   return (
