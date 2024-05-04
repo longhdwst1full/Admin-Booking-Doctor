@@ -14,7 +14,7 @@ export default function UserPage() {
   const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
 
   const handleGetData = async () => {
-    const data = await getCaller<IUsers[]>('/User')
+    const data = await getCaller<IUsers[]>('User')
     if (data) {
       setDataRoles(data.data)
     }
@@ -25,7 +25,7 @@ export default function UserPage() {
   }, [])
   const onFinish = async (values: any) => {
     if (!dataEdit?.id) {
-      await postCaller('User', values)
+      await postCaller('/User', {...values, })
       toast.success('Thêm người dùng thành công!')
     } else {
       await putCaller(`User/${dataEdit.id}`, {
@@ -45,6 +45,7 @@ export default function UserPage() {
       }
       toast.success('Update người dùng thành công!')
     }
+    setOpenDrawer(false)
   }
   const dataSource = dataRoles?.map((items, index) => {
     return {

@@ -13,7 +13,7 @@ export default function SpecialtyPage() {
   const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
 
   const handleGetData = async () => {
-    const data = await getCaller<ISpecialty[]>('/Role')
+    const data = await getCaller<ISpecialty[]>('/Specialty')
     if (data) {
       setDataSpecialty(data.data)
     }
@@ -25,7 +25,12 @@ export default function SpecialtyPage() {
 
   const handleGetUser = (id: string) => {
     const user = dataSpecialty?.find((item) => item?.specialtyID == id)
-    user ? setDataEdit(user) : toast.error('Không tìm thấy phòng khám')
+    if (user) {
+      setDataEdit(user)
+      setOpenDrawer(true)
+    } else {
+      toast.error('Không tìm thấy phòng khám')
+    }
   }
   const onFinish = async (values: any) => {
     var dataBody = {
@@ -41,6 +46,7 @@ export default function SpecialtyPage() {
         .catch((e) => toast.error(e))
     }
     await handleGetData()
+    setOpenDrawer(false)
   }
 
   const dataSource = dataSpecialty?.map((items, index) => {
@@ -94,7 +100,7 @@ export default function SpecialtyPage() {
 
       <Table dataSource={dataSource} columns={columns} />
       <Drawer
-        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} phòng khám`}
+        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} Chuyên khoa`}
         placement='right'
         width={700}
         onClose={() => setOpenDrawer(!openDrawer)}

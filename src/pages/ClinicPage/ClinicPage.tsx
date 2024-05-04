@@ -7,6 +7,7 @@ import { useSevices } from '~/configs/useSevice'
 import { IClinic } from '~/types/clinic.type'
 import ClinicCreate from './ClinicCreate'
 import dayjs from 'dayjs'
+import { render } from 'react-dom'
 
 export default function ClinicPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -28,6 +29,7 @@ export default function ClinicPage() {
   const handleGetOnedata = (id: string) => {
     const user = data?.find((item) => item.clinicID === +id)
     user ? setDataEdit(user) : toast.error('Không tìm thấy quyền')
+    setOpenDrawer(true)
   }
   const onFinish = async (values: any) => {
     if (!dataEdit?.id) {
@@ -35,12 +37,12 @@ export default function ClinicPage() {
       toast.success('Thêm phòng khám thành công!')
     } else {
       await putCaller(`/Clinics/${dataEdit.id}`, {
-        ...values,
-       
+        ...values
       })
       toast.success('Update phòng khám thành công!')
     }
     await handleGetData()
+    setOpenDrawer(false)
   }
 
   const dataSource =
@@ -51,8 +53,8 @@ export default function ClinicPage() {
         key: items.clinicID,
         name: items.clinicName,
         address: items.address,
-        appointments: dayjs(items.appointments[0].appointmentDate),
-        services: items.services[0].serviceName
+        appointments: items?.appointments && dayjs(items.appointments[0].appointmentDate),
+        services: items.services&&items.services[0].serviceName
       }
     })
 
@@ -95,9 +97,9 @@ export default function ClinicPage() {
               Edit
             </Button>
             <Button
-              onClick={() => {
+              onClick={ () => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
-                  deleteCaller(`/IClinic/${key}`)
+                   deleteCaller(`/IClinic/${key}`)
                     .then(async () => {
                       toast.success('Deleted successfully')
                       await handleGetData()

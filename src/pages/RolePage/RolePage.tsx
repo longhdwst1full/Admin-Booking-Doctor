@@ -26,7 +26,12 @@ export default function RolePage() {
 
   const handleGetdataRole = (id: string) => {
     const user = dataRoles?.find((item) => item.id === +id)
-    user ? setDataEdit(user) : toast.error('Không tìm thấy quyền')
+    if (user) {
+      setDataEdit(user)
+      setOpenDrawer(true)
+    } else {
+      toast.error('Không tìm thấy quyền')
+    }
   }
   const onFinish = async (values: any) => {
     if (!dataEdit?.id) {
@@ -34,12 +39,12 @@ export default function RolePage() {
       toast.success('Thêm quyền thành công!')
     } else {
       await putCaller(`/Role/${dataEdit.id}`, {
-        ...values,
-        
+        ...values
       })
       toast.success('Update quyền thành công!')
     }
     await handleGetData()
+    setOpenDrawer(false)
   }
 
   const columns: ColumnsType<any> = [
@@ -58,34 +63,37 @@ export default function RolePage() {
     {
       key: 'action',
       title: 'Action',
-      render: ({ key }: any) => (
-        <Space size='middle'>
-          <Button
-            type='primary'
-            className='bg-blue-600'
-            size='middle'
-            onClick={() => {
-              handleGetdataRole(key)
-            }}
-          >
-            Sửa
-          </Button>
-          <Button
-            onClick={() => {
-              if (window.confirm('Are you sure you want to delete this item?')) {
-                deleteCaller(`/Role/${key}`)
-                  .then(async () => {
-                    toast.success('Deleted successfully')
-                    await handleGetData()
-                  })
-                  .catch((error) => toast.error(error))
-              }
-            }}
-          >
-            Xóa
-          </Button>
-        </Space>
-      )
+      render: (data: any) => {
+        console.log(data)
+        return (
+          <Space size='middle'>
+            <Button
+              type='primary'
+              className='bg-blue-600'
+              size='middle'
+              onClick={() => {
+                handleGetdataRole(data.id)
+              }}
+            >
+              Sửa
+            </Button>
+            <Button
+              onClick={() => {
+                if (window.confirm('Are you sure you want to delete this item?')) {
+                  deleteCaller(`/Role/${data.id}`)
+                    .then(async () => {
+                      toast.success('Deleted successfully')
+                      await handleGetData()
+                    })
+                    .catch((error) => toast.error(error))
+                }
+              }}
+            >
+              Xóa
+            </Button>
+          </Space>
+        )
+      }
     }
   ]
 

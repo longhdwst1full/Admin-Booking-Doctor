@@ -32,7 +32,7 @@ const SpecialtyCreate = ({ dataEdit, onFinish }: Props) => {
         autoComplete='off'
       >
         <Form.Item
-          label='serviceName'
+          label='Tên chuyên khoa'
           name='username'
           rules={[{ required: true, message: 'Please input your serviceName!' }]}
         >
