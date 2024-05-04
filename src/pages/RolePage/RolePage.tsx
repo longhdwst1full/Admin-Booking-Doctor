@@ -1,27 +1,52 @@
 import { Button, Drawer, Space, Table } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
-import { useDeleteRoleMutation, useGetAllRoleQuery } from '~/store/services/role.service'
+import { useSevices } from '~/configs/useSevice'
+import { IRole } from '~/types/user.type'
 import RoleCreate from './RoleCreate'
 
 export default function RolePage() {
   const [openDrawer, setOpenDrawer] = useState(false)
-  const [dataEdit, setDataEdit] = useState<any>()
-  const { data: dataRoles } = useGetAllRoleQuery()
-  const [deletedataRoles, { isLoading: isDeleteLoading }] = useDeleteRoleMutation()
+  const [dataEdit, setDataEdit] = useState<IRole>()
+  const [dataRoles, setDataRoles] = useState<IRole[]>()
+  const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
+
+  const handleGetData = async () => {
+    const data = await getCaller<IRole[]>('/Role')
+    if (data) {
+      setDataRoles(data.data)
+    }
+  }
+
+  useEffect(() => {
+    handleGetData()
+  }, [])
 
   const handleGetdataRole = (id: string) => {
     const user = dataRoles?.find((item) => item.id === +id)
     user ? setDataEdit(user) : toast.error('Không tìm thấy quyền')
   }
+  const onFinish = async (values: any) => {
+    if (!dataEdit?.id) {
+      await postCaller('/Role', values)
+      toast.success('Thêm quyền thành công!')
+    } else {
+      await putCaller(`/Role/${dataEdit.id}`, {
+        ...values,
+        
+      })
+      toast.success('Update quyền thành công!')
+    }
+    await handleGetData()
+  }
 
   const columns: ColumnsType<any> = [
     {
-      key: 'title',
-      dataIndex: 'title',
-      title: 'Title'
+      key: 'id',
+      dataIndex: 'id',
+      title: 'id'
     },
 
     {
@@ -48,7 +73,12 @@ export default function RolePage() {
           <Button
             onClick={() => {
               if (window.confirm('Are you sure you want to delete this item?')) {
-                deletedataRoles(key)
+                deleteCaller(`/Role/${key}`)
+                  .then(async () => {
+                    toast.success('Deleted successfully')
+                    await handleGetData()
+                  })
+                  .catch((error) => toast.error(error))
               }
             }}
           >
@@ -71,7 +101,7 @@ export default function RolePage() {
         onClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
-        <RoleCreate dataEdit={dataEdit ?? dataEdit} />
+        <RoleCreate dataEdit={dataEdit ?? dataEdit} onFinish={onFinish} />
       </Drawer>
     </>
   )

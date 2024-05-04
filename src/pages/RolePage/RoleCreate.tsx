@@ -1,41 +1,21 @@
 import { Button, Form, Input } from 'antd'
 import { useEffect } from 'react'
-import toast from 'react-hot-toast'
-import { useAddRoleMutation, useUpdateRoleMutation } from '~/store/services/role.service'
+import { IRole } from '~/types/user.type'
 
 interface Props {
-  dataEdit?: any
+  dataEdit?: IRole
+  onFinish: (values: any) => Promise<void>
 }
 
-export default function RoleCreate({ dataEdit }: Props) {
-  const [createUser, { isLoading, isError: errAdd, data }] = useAddRoleMutation()
-  const [updateUser, { isError: errUpdate }] = useUpdateRoleMutation()
+export default function RoleCreate({ dataEdit, onFinish }: Props) {
   const [form] = Form.useForm()
 
   useEffect(() => {
     if (dataEdit && dataEdit.id) {
-      form.setFieldsValue(dataEdit)
+      form.setFieldValue("Name",dataEdit.name)
     }
   }, [form, dataEdit])
 
-  useEffect(() => {
-    if (errAdd || errUpdate) {
-      toast.error('Error')
-    }
-  }, [errAdd, errUpdate])
-
-  const onFinish = async (values: any) => {
-    if (!dataEdit?.id) {
-      await createUser(values)
-      toast.success('Thêm quyền thành công!')
-    } else {
-      await updateUser({
-        ...values,
-        id: dataEdit.id
-      })
-      toast.success('Update quyền thành công!')
-    }
-  }
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
   }
@@ -53,7 +33,7 @@ export default function RoleCreate({ dataEdit }: Props) {
         onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        <Form.Item label='Tên quyền' name='name' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+        <Form.Item label='Tên quyền' name='Name' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
           <Input />
         </Form.Item>
 

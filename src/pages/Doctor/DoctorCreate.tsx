@@ -1,33 +1,26 @@
 import { Button, Form, Input, Select } from 'antd'
 import { useEffect } from 'react'
-import { useAddDoctorMutation, useUpdateDoctorMutation } from '~/store/services/docter'
 import { useGetAllSpecialtyQuery } from '~/store/services/specialty'
 import { IDoctor } from '~/types/doctor.type'
 
 interface Props {
   dataDoctor?: IDoctor
+  onFinish: (values: any) => Promise<void>
 }
-const DoctorCreate = ({ dataDoctor }: Props) => {
+const DoctorCreate = ({ dataDoctor , onFinish}: Props) => {
   const [form] = Form.useForm()
    
   const { data: dataSpecicaly } = useGetAllSpecialtyQuery()
-  const [addDoctorFn] = useAddDoctorMutation()
-  const [updateDoctorFn] = useUpdateDoctorMutation()
-
+   
   useEffect(() => {
-    if (dataDoctor && dataDoctor.specialtyID) {
-      form.setFieldsValue(dataDoctor)
-      form.setFieldValue('password', undefined)
+    if (dataDoctor && dataDoctor.id) {
+      form.setFieldValue('password', dataDoctor.password)
+      form.setFieldValue('doctorName', dataDoctor.doctorName)
+      form.setFieldValue('email', dataDoctor.email)
+      form.setFieldValue('specialtyID', dataDoctor.specialty)
     }
   }, [dataDoctor, form])
 
-  const onFinish = async (values: any) => {
-    if (!dataDoctor?.specialtyID) {
-      await addDoctorFn(values)
-    } else {
-      await updateDoctorFn({ ...values, id: dataDoctor.specialtyID })
-    }
-  }
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
@@ -68,11 +61,11 @@ const DoctorCreate = ({ dataDoctor }: Props) => {
         <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
           <Input type='email' />
         </Form.Item>
-        {!(dataDoctor && dataDoctor?.specialtyID) && (
+      
           <Form.Item label='Mật khẩu' name='password' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
             <Input.Password />
           </Form.Item>
-        )}
+      
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type='primary' htmlType='submit'>

@@ -62,7 +62,7 @@ export const itemsStaff: MenuProps['items'] = [
     getItem(<NavLink to={`/manager/appointments`}>Cuộc hẹn</NavLink>, 'Appointments', <FaListUl />),
     getItem(<NavLink to={`/manager/specialites`}>Chuyên khoa</NavLink>, 'Specialities', <FaPeopleArrows />),
 
-    getItem(<NavLink to={`/manager/role`}>Role</NavLink>, 'role', <BiCategoryAlt />)
+    getItem(<NavLink to={`/manager/role`}>Quyền</NavLink>, 'role', <BiCategoryAlt />)
     // quản lý người dùng
   ]),
   getItem('Người dùng', 'users', <UserOutlined />, [

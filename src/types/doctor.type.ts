@@ -21,11 +21,9 @@ export interface IPostDoctorResponse {
 }
 
 export interface IDoctor {
-  doctorId: number
+  id: number
   doctorName: string
-  specialtyID: number
-  specialtyName: string
+
   specialty: string
-  appointments: string[]
-  appointmentHistories: IAppointmentHistory[]
+
 }

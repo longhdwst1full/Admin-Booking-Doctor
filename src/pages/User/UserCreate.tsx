@@ -1,14 +1,12 @@
 import { Button, Form, Input } from 'antd'
 import { useEffect } from 'react'
-import toast from 'react-hot-toast'
-import { useAddUserMutation, useUpdateUserMutation } from '~/store/services/Users/user.service'
+import { IUsers } from '~/types/user.type'
 
 interface Props {
-  dataUser?: any
+  dataUser?: IUsers
+  onFinish: (values: any) => Promise<void>
 }
-const UserCreate = ({ dataUser }: Props) => {
-  const [createUser, { isLoading, isError: errAdd, data }] = useAddUserMutation()
-  const [updateUser, { isError: errUpdate }] = useUpdateUserMutation()
+const UserCreate = ({ dataUser, onFinish }: Props) => {
   const [form] = Form.useForm()
 
   useEffect(() => {
@@ -17,24 +15,6 @@ const UserCreate = ({ dataUser }: Props) => {
     }
   }, [form, dataUser])
 
-  useEffect(() => {
-    if (errAdd || errUpdate) {
-      toast.error('Error')
-    }
-  }, [errAdd, errUpdate])
-
-  const onFinish = async (values: any) => {
-    if (!dataUser?.id) {
-      await createUser(values)
-      toast.success('Thêm người dùng thành công!')
-    } else {
-      await updateUser({
-        ...values,
-        id: dataUser.id
-      })
-      toast.success('Update người dùng thành công!')
-    }
-  }
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
   }
@@ -68,7 +48,7 @@ const UserCreate = ({ dataUser }: Props) => {
         <Form.Item
           label='Password'
           name='password'
-          rules={[{ required: true, message: 'Please input your Password!' }]}
+          rules={[{ required: !dataUser ? true : false, message: 'Please input your Password!' }]}
         >
           <Input.Password />
         </Form.Item>

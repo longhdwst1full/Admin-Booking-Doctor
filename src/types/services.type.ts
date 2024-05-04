@@ -3,3 +3,8 @@ export interface ICreateServices {
   cost: any
   description: string
 }
+export interface IServices {
+  serviceName: string
+  cost: any
+  description: string
+}

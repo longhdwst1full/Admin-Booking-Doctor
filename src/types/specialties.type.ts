@@ -17,7 +17,7 @@ export interface ResponeDoctorInSpec {
 }
 
 export interface ISpecialty {
-  doctorId: number
+  specialtyID: string
   specialtyName: string
   appointments: IAppointment[]
   appointmentHistories: IAppointmentHistory[]

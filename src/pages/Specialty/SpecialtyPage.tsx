@@ -1,22 +1,49 @@
 import { Button, Drawer, Table } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
-import { useDeleteSpecialtyMutation, useGetAllSpecialtyQuery } from '~/store/services/specialty'
+import { useSevices } from '~/configs/useSevice'
+import { ISpecialty } from '~/types/specialties.type'
 import SpecialtyCreate from './SpecialtyCreate'
 
 export default function SpecialtyPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
-  const [dataEdit, setDataEdit] = useState<any>()
-  const { data: dataSpecialty } = useGetAllSpecialtyQuery()
-  const [deleteSpecialty, { isLoading: isDeleteLoading }] = useDeleteSpecialtyMutation()
+  const [dataEdit, setDataEdit] = useState<ISpecialty>()
+  const [dataSpecialty, setDataSpecialty] = useState<ISpecialty[]>()
+  const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
 
-  const handleGetUser = (id: string) => {
-    const user = dataSpecialty?.find((item) => item?.id == id)
-    user ? setDataEdit(user) : toast.error('Không tìm thấy phòng khám')
+  const handleGetData = async () => {
+    const data = await getCaller<ISpecialty[]>('/Role')
+    if (data) {
+      setDataSpecialty(data.data)
+    }
   }
 
-  const dataSource = dataSpecialty?.map((items: any, index: number) => {
+  useEffect(() => {
+    handleGetData()
+  }, [])
+
+  const handleGetUser = (id: string) => {
+    const user = dataSpecialty?.find((item) => item?.specialtyID == id)
+    user ? setDataEdit(user) : toast.error('Không tìm thấy phòng khám')
+  }
+  const onFinish = async (values: any) => {
+    var dataBody = {
+      specialtyName: values.username
+    }
+    if (!dataEdit?.specialtyID) {
+      await postCaller('Specialty', dataBody)
+    } else {
+      putCaller(`Specialty/${dataEdit.specialtyID}`, { ...dataBody })
+        .then(() => {
+          toast.success('Update success')
+        })
+        .catch((e) => toast.error(e))
+    }
+    await handleGetData()
+  }
+
+  const dataSource = dataSpecialty?.map((items, index) => {
     return {
       stt: index + 1,
       key: items.specialtyID,
@@ -49,7 +76,7 @@ export default function SpecialtyPage() {
             <Button
               onClick={() => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
-                  deleteSpecialty(key)
+                  deleteCaller(key)
                 }
               }}
             >
@@ -73,7 +100,7 @@ export default function SpecialtyPage() {
         onClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
-        <SpecialtyCreate dataEdit={dataEdit ?? dataEdit} />
+        <SpecialtyCreate dataEdit={dataEdit ?? dataEdit} onFinish={onFinish} />
       </Drawer>
     </div>
   )

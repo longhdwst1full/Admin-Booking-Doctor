@@ -1,41 +1,24 @@
 import { Button, Form, Input } from 'antd'
 import { useEffect } from 'react'
-import toast from 'react-hot-toast'
-import { useAddClinicMutation, useUpdateClinicMutation } from '~/store/services/clinics'
+
+import { IClinic } from '~/types/clinic.type'
 
 interface Props {
-  dataUser?: any
+  dataUser?: IClinic
+  onFinish: (values: any) => Promise<void>
 }
 
-export default function ClinicCreate({ dataUser }: Props) {
-  const [createClinic, { isLoading, isError: errAdd, data }] = useAddClinicMutation()
-  const [updateUser, { isError: errUpdate }] = useUpdateClinicMutation()
+export default function ClinicCreate({ dataUser, onFinish }: Props) {
   const [form] = Form.useForm()
 
   useEffect(() => {
-    if (dataUser && dataUser.id) {
-      form.setFieldsValue(dataUser)
+    if (dataUser && dataUser.clinicID) {
+      form.setFieldValue('clinicName', dataUser.clinicName)
+      form.setFieldValue('address', dataUser.address)
+      form.setFieldValue('phone', dataUser.phone)
     }
   }, [form, dataUser])
 
-  useEffect(() => {
-    if (errAdd || errUpdate) {
-      toast.error('Error')
-    }
-  }, [errAdd, errUpdate])
-
-  const onFinish = async (values: any) => {
-    if (!dataUser?.id) {
-      await createClinic(values)
-      toast.success('Thêm phòng khám thành công!')
-    } else {
-      await updateUser({
-        ...values,
-        id: dataUser.id
-      })
-      toast.success('Update phòng khám thành công!')
-    }
-  }
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
   }

@@ -1,29 +1,45 @@
 import { Button, Drawer, Table } from 'antd'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 import DoctorCreate from './DoctorCreate'
-import { useDeleteDoctorMutation, useGetAllDoctorsQuery } from '~/store/services/docter'
+import { useSevices } from '~/configs/useSevice'
+import { IDoctor } from '~/types/doctor.type'
+import toast from 'react-hot-toast'
 
 export default function DoctorPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
-  const [dataSpecialty, setdataSpecialty] = useState([])
-  const navigate = useNavigate()
+  const [dataDoctor, setdataDoctor] = useState<IDoctor[]>([])
+  const [dataEdit, setdataEdit] = useState<IDoctor>()
+
+  const {   postCaller, putCaller } = useSevices()
+
   const fetch = async () => {
     const { data } = await axios.get('http://localhost:7212/api/Doctors')
-    setdataSpecialty(data)
+    setdataDoctor(data)
   }
   useEffect(() => {
     fetch()
   }, [])
-  const [deleteDoctor] = useDeleteDoctorMutation()
+  const handleGetdataRole = (id: string) => {
+    const user = dataDoctor?.find((item) => item.id === +id)
+    user ? setdataEdit(user) : toast.error('Không tìm thấy bác sĩ')
+  }
 
-  const dataSource = dataSpecialty?.map((items: any, index: number) => {
+  const onFinish = async (values: any) => {
+    if (!dataEdit?.id) {
+      await postCaller('Doctors', values)
+    } else {
+      await putCaller('Doctors', { ...values, id: dataEdit?.id })
+    }
+  }
+
+  const dataSource = dataDoctor?.map((items, index) => {
     return {
       stt: index + 1,
       key: items.id,
-      name: items.doctorName
+      name: items.doctorName,
+      specialty: items.specialty
     }
   })
   const columns = [
@@ -37,18 +53,17 @@ export default function DoctorPage() {
       dataIndex: 'name',
       key: 'name'
     },
+    {
+      title: 'Specialty',
+      dataIndex: 'specialty',
+      key: 'specialty'
+    },
 
     {
       render: ({ key }: any) => {
         return (
           <div className='space-x-5'>
-            <Button
-              onClick={() => {
-                navigate('/manager/specialty/create?id=' + key)
-              }}
-            >
-              Sửa
-            </Button>
+            <Button onClick={() => handleGetdataRole(key)}>Sửa</Button>
             <Button
               onClick={async () => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
@@ -76,7 +91,7 @@ export default function DoctorPage() {
         onClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
-        <DoctorCreate />
+        <DoctorCreate dataDoctor={dataEdit ?? dataEdit} onFinish={onFinish} />
       </Drawer>
     </div>
   )
