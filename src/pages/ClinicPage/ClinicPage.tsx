@@ -1,4 +1,4 @@
-import { Button, Drawer, Input, Table } from 'antd'
+import { Button, Drawer, Form, Input, Table } from 'antd'
 
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -16,6 +16,7 @@ export default function ClinicPage() {
   const [data, setData] = useState<IClinic[]>()
   const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
   const [search, setSearch] = useState('')
+  const [form] = Form.useForm()
 
   const handleGetData = async () => {
     const res = await getCaller<IClinic[]>('/Clinics')
@@ -34,17 +35,21 @@ export default function ClinicPage() {
     setOpenDrawer(true)
   }
   const onFinish = async (values: any) => {
-    if (!dataEdit?.clinicID) {
-      await postCaller('/Clinics', values)
-      toast.success('Thêm phòng khám thành công!')
-    } else {
-      await putCaller(`/Clinics/${dataEdit.clinicID}`, {
-        ...values
+    if (!dataEdit) {
+      postCaller('/Clinics', values).then(() => {
+        toast.success('Thêm phòng khám thành công!')
       })
-      toast.success('Update phòng khám thành công!')
+    } else {
+      putCaller(`/Clinics/${dataEdit?.clinicID}`, {
+        ...values
+      }).then(() => {
+        toast.success('Update phòng khám thành công!')
+      })
     }
     await handleGetData()
     setOpenDrawer(false)
+    form.resetFields()
+    setDataEdit(undefined)
   }
 
   const dataSource =
@@ -126,13 +131,15 @@ export default function ClinicPage() {
 
   useDebounce(
     () => {
-      if (data) {
+      if (search) {
+        console.log(2)
         setData(
-          data.filter(
-            (d) =>
-              d.clinicName.includes(search) ||
-              (d.clinicName && d.clinicName.toUpperCase().includes(search.toUpperCase()))
-          )
+          data &&
+            data.filter(
+              (d) =>
+                d.clinicName.includes(search) ||
+                (d.clinicName && d.clinicName.toUpperCase().includes(search.toUpperCase()))
+            )
         )
       }
     },
@@ -143,10 +150,17 @@ export default function ClinicPage() {
   const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value.trim())
   }
-
+  console.log(dataEdit, ':::')
   return (
     <>
-      <Breadcrumb pageName='Phòng khám' openDrawer={() => setOpenDrawer(true)} />
+      <Breadcrumb
+        pageName='Phòng khám'
+        openDrawer={() => {
+          setOpenDrawer(true)
+          form.resetFields()
+          setDataEdit(undefined)
+        }}
+      />
 
       <div className='flex justify-between'>
         <TitlePage title='Quản lý phòng khám' />
@@ -170,7 +184,7 @@ export default function ClinicPage() {
         onClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
-        <ClinicCreate dataUser={dataEdit} onFinish={onFinish} />
+        <ClinicCreate form={form} dataUser={dataEdit} onFinish={onFinish} />
       </Drawer>
     </>
   )

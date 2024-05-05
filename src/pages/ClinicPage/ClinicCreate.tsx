@@ -1,17 +1,16 @@
-import { Button, Form, Input } from 'antd'
+import { Button, Form, FormInstance, Input } from 'antd'
 import { useEffect } from 'react'
 
 import { IClinic } from '~/types/clinic.type'
 
 interface Props {
   dataUser?: IClinic
+  form: FormInstance<any>
   onFinish: (values: any) => Promise<void>
 }
 
-export default function ClinicCreate({ dataUser, onFinish }: Props) {
-  const [form] = Form.useForm()
-
-  useEffect(() => {
+export default function ClinicCreate({ dataUser, onFinish, form }: Props) {
+  useEffect(() => { 
     if (dataUser && dataUser.clinicID) {
       form.setFieldValue('clinicName', dataUser.clinicName)
       form.setFieldValue('address', dataUser.address)

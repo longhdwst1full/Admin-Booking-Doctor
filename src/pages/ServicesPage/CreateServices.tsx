@@ -9,23 +9,17 @@ interface Props {
 
 export default function CreateServices({ dataEdit }: Props) {
   const [form] = Form.useForm()
-  const [dataSevice, setDataService] = useState<any>()
+  const URL = import.meta.env.VITE_API
 
   useEffect(() => {
-    const handelGetIdService = async () => {
-      const { data } = await axios.get('http://localhost:7212/api/Services/' + dataEdit?.serviceId)
-      console.log(data, 'pl')
-      setDataService(data)
+    if (dataEdit) {
+      form.setFieldsValue({
+        username: dataEdit?.serviceName,
+        password: dataEdit?.cost,
+        description: dataEdit?.description
+      })
     }
-    handelGetIdService()
-  }, [])
-  useEffect(() => {
-    form.setFieldsValue({
-      username: dataSevice?.serviceName,
-      password: dataSevice?.cost,
-      description: dataSevice?.description
-    })
-  }, [form, dataSevice])
+  }, [form, dataEdit])
   const onFinish = (values: any) => {
     var dataBody = {
       serviceName: values.username,
@@ -34,14 +28,14 @@ export default function CreateServices({ dataEdit }: Props) {
     }
     if (!dataEdit?.serviceId) {
       axios
-        .post('http://localhost:7212/api/Services', dataBody)
+        .post(URL + '/Services', dataBody)
         .then((items: any) => {
           window.location.href = '/manager/services'
         })
         .catch((e) => console.log(e))
     } else {
       axios
-        .put('http://localhost:7212/api/Services/' + dataEdit?.serviceId, dataBody)
+        .put(URL + '/Services/' + dataEdit?.serviceId, dataBody)
         .then((items: any) => {
           window.location.href = '/manager/services'
         })
@@ -66,22 +60,14 @@ export default function CreateServices({ dataEdit }: Props) {
         onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        <Form.Item
-          label='serviceName'
-          name='username'
-          rules={[{ required: true, message: 'Please input your serviceName!' }]}
-        >
+        <Form.Item label='Tên dịch vụ' name='username' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item label='cost' name='password' rules={[{ required: true, message: 'Please input your cost!' }]}>
+        <Form.Item label='Giá' name='password' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          label='description'
-          name='description'
-          rules={[{ required: true, message: 'Please input your description!' }]}
-        >
+        <Form.Item label='Mô tả' name='description' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
           <Input />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

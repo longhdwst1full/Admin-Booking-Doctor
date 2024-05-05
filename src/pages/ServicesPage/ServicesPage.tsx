@@ -1,21 +1,22 @@
 import { Button, Drawer, Input, Table } from 'antd'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
-import CreateServices from './CreateServices'
-import { IServices } from '~/types/services.type'
+import { useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
-import { useDebounce } from '~/hooks'
+import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 import TitlePage from '~/components/TitlePage'
+import { useDebounce } from '~/hooks'
+import { IServices } from '~/types/services.type'
+import CreateServices from './CreateServices'
 
 export default function ServicesPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
+  const URL = import.meta.env.VITE_API
   const [dataEdit, setDataEdit] = useState<IServices>()
-
+  const [serviceName, setserviceName] = useState('')
+  const [dataTable, setDataTable] = useState<any>([])
   const [dataSpecialty, setDataSpecialty] = useState<IServices[]>([])
   const handelFetchData = async () => {
-    const { data } = await axios.get('http://localhost:7212/api/Services')
+    const { data } = await axios.get(URL + '/Services')
     setDataSpecialty(data)
   }
   useEffect(() => {
@@ -33,15 +34,16 @@ export default function ServicesPage() {
     }
   }
 
-  const dataSource: any = (data?: any[]) =>
-    (data ? data : dataSpecialty).map((items, index) => ({
+  useEffect(() => {
+    const dataSource = dataSpecialty?.map((items, index) => ({
       stt: index + 1,
       key: items.serviceId,
       name: items.serviceName,
       description: items.description,
       cost: items.cost
     }))
-
+    dataSource && setDataTable(dataSource)
+  }, [dataSpecialty])
   const columns = [
     {
       title: '#',
@@ -78,9 +80,9 @@ export default function ServicesPage() {
               onClick={() => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
                   axios
-                    .delete('http://localhost:7212/api/Services/' + key)
-                    .then(() => {
-                      handelFetchData()
+                    .delete(URL + '/Services/' + key)
+                    .then(async () => {
+                      await handelFetchData()
                     })
                     .catch((error) => console.log(error))
                 }
@@ -93,11 +95,10 @@ export default function ServicesPage() {
       }
     }
   ]
-  const [serviceName, setserviceName] = useState('')
 
   useDebounce(
     () => {
-      if (dataSpecialty) {
+      if (serviceName) {
         console.log(dataSpecialty)
         setDataSpecialty(
           dataSpecialty.filter(
@@ -113,6 +114,7 @@ export default function ServicesPage() {
   )
 
   const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value)
     setserviceName(e.target.value.trim())
   }
 
@@ -121,7 +123,7 @@ export default function ServicesPage() {
       <Breadcrumb pageName='Dịch vụ' openDrawer={() => setOpenDrawer(true)} />
 
       <div className='flex justify-between'>
-        <TitlePage title='Quản lý hóa đơn' />
+        <TitlePage title='Quản lý dịch vụ' />
       </div>
 
       <div className='my-2 flex'>
@@ -133,9 +135,9 @@ export default function ServicesPage() {
           style={{ width: 200 }}
         />
       </div>
-      <Table dataSource={dataSource(dataSpecialty)} columns={columns} />
+      <Table dataSource={dataTable} columns={columns} />
       <Drawer
-        title={`${true ? 'Thêm' : 'Cập nhật'} sản phẩm`}
+        title={`${true ? 'Thêm' : 'Cập nhật'} dịch vụ`}
         placement='right'
         width={700}
         onClose={() => setOpenDrawer(!openDrawer)}

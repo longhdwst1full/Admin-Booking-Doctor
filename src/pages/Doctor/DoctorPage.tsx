@@ -12,10 +12,10 @@ export default function DoctorPage() {
   const [dataDoctor, setdataDoctor] = useState<IDoctor[]>([])
   const [dataEdit, setdataEdit] = useState<IDoctor>()
 
-  const { postCaller, putCaller } = useSevices()
+  const { postCaller, putCaller , getCaller} = useSevices()
 
   const fetch = async () => {
-    const { data } = await axios.get('http://localhost:7212/api/Doctors')
+    const { data } = await getCaller<IDoctor[]>('/Doctors')
     setdataDoctor(data)
   }
   useEffect(() => {
