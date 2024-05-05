@@ -52,21 +52,19 @@ const menuAdmin: MenuProps['items'] = [
     // quản lý người dùng
   ]),
   getItem('Người dùng', 'users', <UserOutlined />, [
-    getItem(<NavLink to={`/manager/users`}>Khách hàng</NavLink>, 'customers', <FaUserFriends />)
+    getItem(<NavLink to={`/manager/users`}>Khách hàng</NavLink>, 'customers', <FaUserFriends />),
+    getItem(<NavLink to={`/manager/starts`}>Nhân viên</NavLink>, 'customers', <FaUserFriends />)
   ])
 ]
 const menuDoctor: MenuProps['items'] = [
-  
   getItem('Quản lý', 'manager', <AiOutlineControl />, [
     getItem(<NavLink to={`/manager/doctor`}>Bác sĩ</NavLink>, 'doctor', <ShoppingOutlined />),
     getItem(<NavLink to={`/manager/clinic`}>Phòng Khám</NavLink>, 'clinic', <BiSolidCategoryAlt />),
     getItem(<NavLink to={`/manager/services`}>Dịch vụ</NavLink>, 'services', <BiSolidCategoryAlt />),
 
     getItem(<NavLink to={`/manager/appointments`}>Cuộc hẹn</NavLink>, 'Appointments', <FaListUl />),
-    getItem(<NavLink to={`/manager/specialites`}>Chuyên khoa</NavLink>, 'Specialities', <FaPeopleArrows />),
- 
-  ]),
-  
+    getItem(<NavLink to={`/manager/specialites`}>Chuyên khoa</NavLink>, 'Specialities', <FaPeopleArrows />)
+  ])
 ]
 
 export const handleMenu = () => {

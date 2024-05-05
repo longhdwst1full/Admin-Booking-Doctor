@@ -16,6 +16,7 @@ import { default as ServicesPage } from '~/pages/ServicesPage/ServicesPage'
 import SignIn from '~/pages/SignIn/SignIn'
 import UserPage from '~/pages/User/UserPage'
 import { GuardAccount } from './guardRoute'
+import StaffPage from '~/pages/Staff/StaffPage'
 
 const routers = createBrowserRouter([
   {
@@ -45,6 +46,7 @@ const routers = createBrowserRouter([
           { path: 'appointments', element: <AppointmentPage /> },
           { path: 'customers', element: <CustomerPage /> },
           { path: 'users', element: <UserPage /> },
+          { path: 'starts', element: <StaffPage /> },
           { path: 'clinic', element: <ClinicPage /> },
           { path: 'orders', element: <OrderPage /> },
           { path: 'specialites', element: <SpecialtyPage /> }

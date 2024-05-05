@@ -5,9 +5,9 @@ import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 
 import { useSevices } from '~/configs/useSevice'
 import { IUsers } from '~/types/user.type'
-import UserCreate from './UserCreate'
+import StaffCreate from './StaffCreate'
 
-export default function UserPage() {
+export default function StaffPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [dataEdit, setDataEdit] = useState<IUsers>()
   const [dataRoles, setDataRoles] = useState<IUsers[]>()
@@ -25,8 +25,8 @@ export default function UserPage() {
   }, [])
   const onFinish = async (values: any) => {
     if (!dataEdit?.id) {
-      await postCaller('/User', {...values, })
-      toast.success('Thêm người dùng thành công!')
+      await postCaller('/User', { ...values })
+      toast.success('Thêm nhân viên thành công!')
     } else {
       await putCaller(`User/${dataEdit.id}`, {
         userName: values.userName,
@@ -43,7 +43,7 @@ export default function UserPage() {
           passWord: values.passWord
         })
       }
-      toast.success('Update người dùng thành công!')
+      toast.success('Update nhân viên thành công!')
     }
     await handleGetData()
     setOpenDrawer(false)
@@ -109,10 +109,10 @@ export default function UserPage() {
               Edit
             </Button>
             <Button
-              onClick={async() => {
+              onClick={async () => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
-                await  deleteCaller(`/User/${key}`)
-                await handleGetData()
+                  await deleteCaller(`/User/${key}`)
+                  await handleGetData()
                 }
               }}
             >
@@ -136,7 +136,7 @@ export default function UserPage() {
         onClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
-        <UserCreate dataUser={dataEdit} onFinish={onFinish} />
+        <StaffCreate dataUser={dataEdit} onFinish={onFinish} />
       </Drawer>
     </>
   )
