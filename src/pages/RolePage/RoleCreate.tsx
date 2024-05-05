@@ -33,7 +33,7 @@ export default function RoleCreate({ dataEdit, onFinish }: Props) {
         onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        <Form.Item label='Tên quyền' name='Name' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+        <Form.Item label='Tên chức vụ' name='Name' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
           <Input />
         </Form.Item>
 

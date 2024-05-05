@@ -1,4 +1,4 @@
-import { Button, Drawer, Table } from 'antd'
+import { Button, Drawer, Input, Table } from 'antd'
 
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -7,12 +7,15 @@ import { useSevices } from '~/configs/useSevice'
 import { IClinic } from '~/types/clinic.type'
 import ClinicCreate from './ClinicCreate'
 import dayjs from 'dayjs'
+import { useDebounce } from '~/hooks'
+import TitlePage from '~/components/TitlePage'
 
 export default function ClinicPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [dataEdit, setDataEdit] = useState<IClinic>()
   const [data, setData] = useState<IClinic[]>()
   const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
+  const [search, setSearch] = useState('')
 
   const handleGetData = async () => {
     const res = await getCaller<IClinic[]>('/Clinics')
@@ -27,7 +30,7 @@ export default function ClinicPage() {
 
   const handleGetOnedata = (id: string) => {
     const user = data?.find((item) => item.clinicID === +id)
-    user ? setDataEdit(user) : toast.error('Không tìm thấy quyền')
+    user ? setDataEdit(user) : toast.error('Không tìm thấy phòng khám')
     setOpenDrawer(true)
   }
   const onFinish = async (values: any) => {
@@ -121,9 +124,43 @@ export default function ClinicPage() {
     }
   ]
 
+  useDebounce(
+    () => {
+      if (data) {
+        setData(
+          data.filter(
+            (d) =>
+              d.clinicName.includes(search) ||
+              (d.clinicName && d.clinicName.toUpperCase().includes(search.toUpperCase()))
+          )
+        )
+      }
+    },
+    [],
+    800
+  )
+
+  const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value.trim())
+  }
+
   return (
     <>
       <Breadcrumb pageName='Phòng khám' openDrawer={() => setOpenDrawer(true)} />
+
+      <div className='flex justify-between'>
+        <TitlePage title='Quản lý phòng khám' />
+      </div>
+
+      <div className='my-2 flex'>
+        <Input
+          className='ml-3'
+          value={search}
+          onChange={onChangeSearchName}
+          placeholder='Tìm phòng khám'
+          style={{ width: 200 }}
+        />
+      </div>
 
       <Table dataSource={dataSource} columns={columns} />
       <Drawer

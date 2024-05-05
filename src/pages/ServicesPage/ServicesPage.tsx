@@ -1,4 +1,4 @@
-import { Button, Drawer, Table } from 'antd'
+import { Button, Drawer, Input, Table } from 'antd'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -6,6 +6,8 @@ import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 import CreateServices from './CreateServices'
 import { IServices } from '~/types/services.type'
 import toast from 'react-hot-toast'
+import { useDebounce } from '~/hooks'
+import TitlePage from '~/components/TitlePage'
 
 export default function ServicesPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -31,15 +33,15 @@ export default function ServicesPage() {
     }
   }
 
-  const dataSource = dataSpecialty.map((items: any, index: number) => {
-    return {
+  const dataSource: any = (data?: any[]) =>
+    (data ? data : dataSpecialty).map((items, index) => ({
       stt: index + 1,
       key: items.serviceId,
       name: items.serviceName,
       description: items.description,
       cost: items.cost
-    }
-  })
+    }))
+
   const columns = [
     {
       title: '#',
@@ -91,12 +93,47 @@ export default function ServicesPage() {
       }
     }
   ]
+  const [serviceName, setserviceName] = useState('')
+
+  useDebounce(
+    () => {
+      if (dataSpecialty) {
+        console.log(dataSpecialty)
+        setDataSpecialty(
+          dataSpecialty.filter(
+            (d) =>
+              d.serviceName.includes(serviceName) ||
+              (d.serviceName && d.serviceName.toUpperCase().includes(serviceName.toUpperCase()))
+          )
+        )
+      }
+    },
+    [],
+    800
+  )
+
+  const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setserviceName(e.target.value.trim())
+  }
 
   return (
     <div>
       <Breadcrumb pageName='Dịch vụ' openDrawer={() => setOpenDrawer(true)} />
 
-      <Table dataSource={dataSource} columns={columns} />
+      <div className='flex justify-between'>
+        <TitlePage title='Quản lý hóa đơn' />
+      </div>
+
+      <div className='my-2 flex'>
+        <Input
+          className='ml-3'
+          value={serviceName}
+          onChange={onChangeSearchName}
+          placeholder='Tìm dịch vụ'
+          style={{ width: 200 }}
+        />
+      </div>
+      <Table dataSource={dataSource(dataSpecialty)} columns={columns} />
       <Drawer
         title={`${true ? 'Thêm' : 'Cập nhật'} sản phẩm`}
         placement='right'

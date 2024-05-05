@@ -30,18 +30,18 @@ export default function RolePage() {
       setDataEdit(user)
       setOpenDrawer(true)
     } else {
-      toast.error('Không tìm thấy quyền')
+      toast.error('Không tìm thấy chức vụ')
     }
   }
   const onFinish = async (values: any) => {
     if (!dataEdit?.id) {
       await postCaller('/Role', values)
-      toast.success('Thêm quyền thành công!')
+      toast.success('Thêm chức vụ thành công!')
     } else {
       await putCaller(`/Role/${dataEdit.id}`, {
         ...values
       })
-      toast.success('Update quyền thành công!')
+      toast.success('Update chức vụ thành công!')
     }
     await handleGetData()
     setOpenDrawer(false)
@@ -99,11 +99,11 @@ export default function RolePage() {
 
   return (
     <>
-      <Breadcrumb pageName='Quyền hạn' openDrawer={() => setOpenDrawer(true)} />
+      <Breadcrumb pageName='Chức vụ' openDrawer={() => setOpenDrawer(true)} />
 
       <Table columns={columns} dataSource={dataRoles} />
       <Drawer
-        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} quyền`}
+        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} chức vụ`}
         placement='right'
         width={700}
         onClose={() => setOpenDrawer(!openDrawer)}

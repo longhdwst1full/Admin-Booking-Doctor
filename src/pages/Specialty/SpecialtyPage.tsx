@@ -1,10 +1,12 @@
-import { Button, Drawer, Table } from 'antd'
+import { Button, Drawer, Input, Table } from 'antd'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 import { useSevices } from '~/configs/useSevice'
 import { ISpecialty } from '~/types/specialties.type'
 import SpecialtyCreate from './SpecialtyCreate'
+import { useDebounce } from '~/hooks'
+import TitlePage from '~/components/TitlePage'
 
 export default function SpecialtyPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -97,10 +99,45 @@ export default function SpecialtyPage() {
     }
   ]
 
+  const [serviceName, setserviceName] = useState('')
+
+  useDebounce(
+    () => {
+      if (dataSpecialty) {
+        setDataSpecialty(
+          dataSpecialty.filter(
+            (d) =>
+              d.specialtyName.includes(serviceName) ||
+              (d.specialtyName && d.specialtyName.toUpperCase().includes(serviceName.toUpperCase()))
+          )
+        )
+      }
+    },
+    [],
+    800
+  )
+
+  const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setserviceName(e.target.value.trim())
+  }
+
   return (
     <div>
       <Breadcrumb pageName='Chuyên Khoa' openDrawer={() => setOpenDrawer(true)} />
 
+      <div className='flex justify-between'>
+        <TitlePage title='Quản lý chuyên khoa' />
+      </div>
+
+      <div className='my-2 flex'>
+        <Input
+          className='ml-3'
+          value={serviceName}
+          onChange={onChangeSearchName}
+          placeholder='Tìm chuyên khoa'
+          style={{ width: 200 }}
+        />
+      </div>
       <Table dataSource={dataSource} columns={columns} />
       <Drawer
         title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} Chuyên khoa`}
