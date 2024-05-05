@@ -70,5 +70,5 @@ const menuDoctor: MenuProps['items'] = [
 export const handleMenu = () => {
   const user = getAuthLocalData()
   console.log(user?.user?.role)
-  return user && user.user?.role == 1 ? menuAdmin : user.user?.role == 2 ? menuDoctor : menuStaff
+  return user && user?.user?.role == 1 ? menuAdmin : user?.user?.role == 2 ? menuDoctor : menuAdmin
 }
