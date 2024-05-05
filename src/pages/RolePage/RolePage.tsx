@@ -68,6 +68,7 @@ export default function RolePage() {
       key: 'action',
       title: 'Action',
       render: (data: any) => {
+        console.log(data)
         return (
           <Space size='middle'>
             <Button
@@ -83,6 +84,10 @@ export default function RolePage() {
             <Button
               onClick={() => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
+                  if (data.name == 'admin') {
+                    toast.error('Không thể xóa Admin')
+                    return
+                  }
                   deleteCaller(`/Role/${data.id}`)
                     .then(async () => {
                       toast.success('Deleted successfully')
@@ -121,7 +126,7 @@ export default function RolePage() {
         }}
         open={openDrawer}
       >
-        <RoleCreate dataEdit={dataEdit ?? dataEdit} onFinish={onFinish} form={form}/>
+        <RoleCreate dataEdit={dataEdit ?? dataEdit} onFinish={onFinish} form={form} />
       </Drawer>
     </>
   )

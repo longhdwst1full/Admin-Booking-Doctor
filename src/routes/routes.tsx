@@ -48,13 +48,13 @@ const routers = createBrowserRouter([
           { path: 'users', element: <UserPage /> },
           { path: 'starts', element: <StaffPage /> },
           { path: 'clinic', element: <ClinicPage /> },
-          { path: 'orders', element: <OrderPage /> },
+
           { path: 'specialites', element: <SpecialtyPage /> }
         ]
       }
     ]
   },
-  
+
   {
     path: '/profile',
     children: [

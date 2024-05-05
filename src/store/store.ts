@@ -6,16 +6,10 @@ import { useDispatch } from 'react-redux'
 import storage from 'redux-persist/lib/storage'
 
 import { AuthApi } from './services/Auth/auth'
-import { orderApi } from './services/Orders/orders.service'
-import { userApi } from './services/Users/user.service'
-import { clinicsApi } from './services/clinics'
-import { doctorApi } from './services/docter'
-import { roleApi } from './services/role.service'
-import { servicesApi } from './services/services.service'
+
 import { authReducer } from './slices/auth.slice'
 import { themeReducer } from './slices/theme.slice'
 import { userReducer } from './slices/user.slice'
-import { specialtyApi } from './services/specialty'
 
 const persistConfig = {
   key: 'root',
@@ -30,34 +24,14 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const middlewares = [
-  userApi.middleware,
-
-  orderApi.middleware,
-
-  AuthApi.middleware,
-
-  doctorApi.middleware,
-  roleApi.middleware,
-  servicesApi.middleware,
-  clinicsApi.middleware,
-  specialtyApi.middleware
-]
+const middlewares = [AuthApi.middleware]
 
 export const store = configureStore({
   reducer: {
     /* redux toolkit query */
-    [userApi.reducerPath]: userApi.reducer,
-
-    [orderApi.reducerPath]: orderApi.reducer,
 
     [AuthApi.reducerPath]: AuthApi.reducer,
 
-    [doctorApi.reducerPath]: doctorApi.reducer,
-    [roleApi.reducerPath]: roleApi.reducer,
-    [servicesApi.reducerPath]: servicesApi.reducer,
-    [clinicsApi.reducerPath]: clinicsApi.reducer,
-    [specialtyApi.reducerPath]: specialtyApi.reducer,
     /* redux toolkit */
     persistedReducer,
     theme: themeReducer,

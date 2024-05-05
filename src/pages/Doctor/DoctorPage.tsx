@@ -68,12 +68,12 @@ export default function DoctorPage() {
       key: 'stt'
     },
     {
-      title: 'Name',
+      title: 'Tên',
       dataIndex: 'name',
       key: 'name'
     },
     {
-      title: 'Specialty',
+      title: 'Chuyên khoa',
       dataIndex: 'specialty',
       key: 'specialty'
     },

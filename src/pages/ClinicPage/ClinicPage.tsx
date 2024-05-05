@@ -62,8 +62,8 @@ export default function ClinicPage() {
         name: items.clinicName,
         phone: items.phone,
         address: items.address,
-        appointments: items?.appointments && dayjs(items.appointments[0].appointmentDate),
-        services: items.services && items.services[0].serviceName
+        appointments: items?.appointments ? items.appointments.length : 0,
+        services: items.services ? items.services.length : 0
       }
     })
 
@@ -74,27 +74,27 @@ export default function ClinicPage() {
       key: 'stt'
     },
     {
-      title: 'Name',
+      title: 'Tên',
       dataIndex: 'name',
       key: 'name'
     },
     {
-      title: 'Phone',
+      title: 'SDT',
       dataIndex: 'phone',
       key: 'phone'
     },
     {
-      title: 'Address',
+      title: 'Địa chỉ',
       dataIndex: 'address',
       key: 'address'
     },
     {
-      title: 'Appointments',
+      title: 'Số cuộc hẹn',
       dataIndex: 'appointments',
       key: 'appointments'
     },
     {
-      title: 'Services',
+      title: 'Số Dịch vụ',
       dataIndex: 'services',
       key: 'services'
     },
@@ -148,7 +148,7 @@ export default function ClinicPage() {
 
   const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value.trim())
-  } 
+  }
   return (
     <>
       <Breadcrumb

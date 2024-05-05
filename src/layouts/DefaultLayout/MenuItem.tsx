@@ -25,9 +25,6 @@ function getItem(
   } as MenuItem
 }
 const menuStaff: MenuProps['items'] = [
-  // quản lý đơn hàng
-  // getItem(<NavLink to={`/manager/orders`}>Đơn hàng</NavLink>, 'orders', <FaClipboardList />),
-
   // quản lý sản phẩm
   getItem('Quản lý', 'manager', <AiOutlineControl />, [
     // getItem(<NavLink to={`/manager/doctor`}>Bác sĩ</NavLink>, 'doctor', <ShoppingOutlined />),
@@ -37,7 +34,7 @@ const menuStaff: MenuProps['items'] = [
 ]
 const menuAdmin: MenuProps['items'] = [
   // quản lý đơn hàng
-  getItem(<NavLink to={`/manager/orders`}>Đơn hàng</NavLink>, 'orders', <FaClipboardList />),
+  getItem(<NavLink to={`/dashboard`}>Thống kê</NavLink>, 'orders', <FaClipboardList />),
 
   // quản lý sản phẩm
   getItem('Quản lý', 'manager', <AiOutlineControl />, [
@@ -53,7 +50,7 @@ const menuAdmin: MenuProps['items'] = [
   ]),
   getItem('Người dùng', 'users', <UserOutlined />, [
     getItem(<NavLink to={`/manager/users`}>Khách hàng</NavLink>, 'customers', <FaUserFriends />),
-    getItem(<NavLink to={`/manager/starts`}>Nhân viên</NavLink>, 'customers', <FaUserFriends />)
+    getItem(<NavLink to={`/manager/starts`}>Nhân viên</NavLink>, 'starts', <FaUserFriends />)
   ])
 ]
 const menuDoctor: MenuProps['items'] = [
