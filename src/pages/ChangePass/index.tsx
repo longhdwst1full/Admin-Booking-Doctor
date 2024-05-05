@@ -3,7 +3,6 @@ import { Button, Form, Input, message } from 'antd'
 import { useState } from 'react'
 import { getToken, removeAuthLocalData } from '~/configs/token'
 import { useSevices } from '~/configs/useSevice'
-import { useLogOutMutation } from '~/store/services/Auth/auth'
 
 type FieldType = {
   password: string

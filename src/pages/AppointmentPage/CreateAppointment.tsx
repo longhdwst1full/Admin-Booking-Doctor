@@ -2,6 +2,7 @@ import { Button, DatePicker, Form, Input, Select } from 'antd'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
+import { useSevices } from '~/configs/useSevice'
 import { IClinic } from '~/types/clinic.type'
 import { IDoctor } from '~/types/doctor.type'
 import { IServices } from '~/types/services.type'
@@ -19,12 +20,14 @@ export default function CreateAppointment({ dataEdit, onFinish }: Props) {
   const [dataDoctor, setDataDoctor] = useState<IDoctor[]>()
   const [clinic, setDataClinic] = useState<IClinic[]>()
   const [disabledDate, setDataDisabled] = useState<boolean>(false)
+  const { getCaller } = useSevices()
+  
   useEffect(() => {
     const handelGetIdService = async () => {
-      const { data } = await axios.get('http://localhost:7212/api/Services')
-      const { data: dataUser } = await axios.get('http://localhost:7212/api/User')
-      const { data: clinics } = await axios.get('http://localhost:7212/api/Clinics')
-      const { data: doctors } = await axios.get('http://localhost:7212/api/Doctors')
+      const { data } = await getCaller<IServices[]>('/Services')
+      const { data: dataUser } = await getCaller<IUsers[]>('/User')
+      const { data: clinics } = await getCaller<IClinic[]>('/Clinics')
+      const { data: doctors } = await getCaller<IDoctor[]>('/Doctors')
       console.log(data, 'pl')
       setDataService(data)
       setDataDoctor(doctors)

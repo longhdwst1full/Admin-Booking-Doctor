@@ -1,18 +1,19 @@
-import { Button, Form, Input } from 'antd'
+import { Button, Form, FormInstance, Input } from 'antd'
 import { useEffect } from 'react'
 import { IRole } from '~/types/user.type'
 
 interface Props {
   dataEdit?: IRole
+  form: FormInstance<any>
   onFinish: (values: any) => Promise<void>
 }
 
-export default function RoleCreate({ dataEdit, onFinish }: Props) {
-  const [form] = Form.useForm()
-
+export default function RoleCreate({ dataEdit, onFinish, form }: Props) {
   useEffect(() => {
     if (dataEdit && dataEdit.id) {
-      form.setFieldValue("Name",dataEdit.name)
+      form.setFieldValue('Name', dataEdit.name)
+    } else {
+      form.resetFields()
     }
   }, [form, dataEdit])
 

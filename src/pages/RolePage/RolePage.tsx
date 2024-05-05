@@ -1,4 +1,4 @@
-import { Button, Drawer, Space, Table } from 'antd'
+import { Button, Drawer, Form, Space, Table } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -12,6 +12,7 @@ export default function RolePage() {
   const [dataEdit, setDataEdit] = useState<IRole>()
   const [dataRoles, setDataRoles] = useState<IRole[]>()
   const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
+  const [form] = Form.useForm()
 
   const handleGetData = async () => {
     const data = await getCaller<IRole[]>('/Role')
@@ -22,6 +23,7 @@ export default function RolePage() {
 
   useEffect(() => {
     handleGetData()
+    setDataEdit(undefined)
   }, [])
 
   const handleGetdataRole = (id: string) => {
@@ -45,6 +47,8 @@ export default function RolePage() {
     }
     await handleGetData()
     setOpenDrawer(false)
+    setDataEdit(undefined)
+    form.resetFields()
   }
 
   const columns: ColumnsType<any> = [
@@ -64,7 +68,6 @@ export default function RolePage() {
       key: 'action',
       title: 'Action',
       render: (data: any) => {
-        console.log(data)
         return (
           <Space size='middle'>
             <Button
@@ -99,17 +102,26 @@ export default function RolePage() {
 
   return (
     <>
-      <Breadcrumb pageName='Chức vụ' openDrawer={() => setOpenDrawer(true)} />
+      <Breadcrumb
+        pageName='Chức vụ'
+        openDrawer={() => {
+          setOpenDrawer(true)
+          setDataEdit(undefined)
+        }}
+      />
 
       <Table columns={columns} dataSource={dataRoles} />
       <Drawer
         title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} chức vụ`}
         placement='right'
         width={700}
-        onClose={() => setOpenDrawer(!openDrawer)}
+        onClose={() => {
+          setOpenDrawer(!openDrawer)
+          setDataEdit(undefined)
+        }}
         open={openDrawer}
       >
-        <RoleCreate dataEdit={dataEdit ?? dataEdit} onFinish={onFinish} />
+        <RoleCreate dataEdit={dataEdit ?? dataEdit} onFinish={onFinish} form={form}/>
       </Drawer>
     </>
   )

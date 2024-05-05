@@ -1,4 +1,5 @@
-import { Button, Form, Input, Select } from 'antd'
+import { Button, Form, FormInstance, Input, Select, TimePicker } from 'antd'
+import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { useSevices } from '~/configs/useSevice'
 import { IDoctor } from '~/types/doctor.type'
@@ -6,28 +7,36 @@ import { ISpecialty } from '~/types/specialties.type'
 
 interface Props {
   dataDoctor?: IDoctor
+  form: FormInstance<any>
   onFinish: (values: any) => Promise<void>
 }
-const DoctorCreate = ({ dataDoctor, onFinish }: Props) => {
-  const [form] = Form.useForm()
+const DoctorCreate = ({ dataDoctor, form, onFinish }: Props) => {
   const { getCaller } = useSevices()
   const [dataSpecicaly, setdataSpecicaly] = useState<ISpecialty[]>([])
 
   const fetch = async () => {
-    const { data } = await getCaller<ISpecialty[]>('Specialty')
+    const { data } = await getCaller<ISpecialty[]>('/Specialty')
     data && setdataSpecicaly(data)
   }
   useEffect(() => {
     fetch()
   }, [])
+
   useEffect(() => {
-    if (dataDoctor && dataDoctor.id) {
+    if (dataDoctor) {
+      const scheduleArr = dataDoctor?.schedule.split('-')
+
       form.setFieldValue('password', (dataDoctor as any)?.password)
       form.setFieldValue('doctorName', dataDoctor.doctorName)
       form.setFieldValue('email', dataDoctor.email)
-      form.setFieldValue('specialtyID', dataDoctor.specialty)
+      form.setFieldValue('schedule', [dayjs(scheduleArr[0], 'HH:mm'), dayjs(scheduleArr[1], 'HH:mm')])
+      const specialty = dataSpecicaly?.find((item) => item.specialtyName == dataDoctor?.specialty)
+
+      form.setFieldValue('specialtyID', specialty?.specialtyID)
+    } else {
+      form.resetFields()
     }
-  }, [dataDoctor, form])
+  }, [dataDoctor, form, dataSpecicaly])
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
@@ -51,6 +60,9 @@ const DoctorCreate = ({ dataDoctor, onFinish }: Props) => {
           rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}
         >
           <Input />
+        </Form.Item>
+        <Form.Item label='Lịch trình' name='schedule' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+          <TimePicker.RangePicker format='HH:mm' />
         </Form.Item>
         <Form.Item
           label='Chuyên khoa'

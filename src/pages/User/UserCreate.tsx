@@ -1,17 +1,18 @@
-import { Button, Form, Input } from 'antd'
+import { Button, Form, FormInstance, Input } from 'antd'
 import { useEffect } from 'react'
 import { IUsers } from '~/types/user.type'
 
 interface Props {
   dataUser?: IUsers
+  form: FormInstance<any>
   onFinish: (values: any) => Promise<void>
 }
-const UserCreate = ({ dataUser, onFinish }: Props) => {
-  const [form] = Form.useForm()
-
+const UserCreate = ({ dataUser, onFinish, form }: Props) => {
   useEffect(() => {
     if (dataUser && dataUser.id) {
       form.setFieldsValue(dataUser)
+    } else {
+      form.resetFields()
     }
   }, [form, dataUser])
 

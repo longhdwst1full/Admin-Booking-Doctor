@@ -1,6 +1,6 @@
 import { Button, Form, Input } from 'antd'
-import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { useSevices } from '~/configs/useSevice'
 import { IServices } from '~/types/services.type'
 
 interface Props {
@@ -9,17 +9,19 @@ interface Props {
 
 export default function CreateServices({ dataEdit }: Props) {
   const [form] = Form.useForm()
-  const URL = import.meta.env.VITE_API
+
+  const { postCaller, putCaller } = useSevices()
 
   useEffect(() => {
-    if (dataEdit) {
-      form.setFieldsValue({
-        username: dataEdit?.serviceName,
-        password: dataEdit?.cost,
-        description: dataEdit?.description
-      })
-    }
+    dataEdit
+      ? form.setFieldsValue({
+          username: dataEdit?.serviceName,
+          password: dataEdit?.cost,
+          description: dataEdit?.description
+        })
+      : form.resetFields()
   }, [form, dataEdit])
+
   const onFinish = (values: any) => {
     var dataBody = {
       serviceName: values.username,
@@ -27,20 +29,19 @@ export default function CreateServices({ dataEdit }: Props) {
       description: values.description
     }
     if (!dataEdit?.serviceId) {
-      axios
-        .post(URL + '/Services', dataBody)
+      postCaller('/Services', dataBody)
         .then((items: any) => {
           window.location.href = '/manager/services'
         })
         .catch((e) => console.log(e))
     } else {
-      axios
-        .put(URL + '/Services/' + dataEdit?.serviceId, dataBody)
+      putCaller('/Services/' + dataEdit?.serviceId, dataBody)
         .then((items: any) => {
           window.location.href = '/manager/services'
         })
         .catch((e) => console.log(e))
     }
+    form.resetFields()
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -60,14 +61,22 @@ export default function CreateServices({ dataEdit }: Props) {
         onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        <Form.Item label='Tên dịch vụ' name='username' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+        <Form.Item
+          label='serviceName'
+          name='username'
+          rules={[{ required: true, message: 'Please input your serviceName!' }]}
+        >
           <Input />
         </Form.Item>
 
-        <Form.Item label='Giá' name='password' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+        <Form.Item label='cost' name='password' rules={[{ required: true, message: 'Please input your cost!' }]}>
           <Input />
         </Form.Item>
-        <Form.Item label='Mô tả' name='description' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+        <Form.Item
+          label='description'
+          name='description'
+          rules={[{ required: true, message: 'Please input your description!' }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

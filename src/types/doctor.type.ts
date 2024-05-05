@@ -24,5 +24,5 @@ export interface IDoctor {
   doctorName: string
   email: string
   specialty: string
-
+  schedule:string
 }

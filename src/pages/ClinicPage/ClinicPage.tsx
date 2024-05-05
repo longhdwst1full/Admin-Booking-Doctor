@@ -1,14 +1,14 @@
 import { Button, Drawer, Form, Input, Table } from 'antd'
 
+import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
+import TitlePage from '~/components/TitlePage'
 import { useSevices } from '~/configs/useSevice'
+import { useDebounce } from '~/hooks'
 import { IClinic } from '~/types/clinic.type'
 import ClinicCreate from './ClinicCreate'
-import dayjs from 'dayjs'
-import { useDebounce } from '~/hooks'
-import TitlePage from '~/components/TitlePage'
 
 export default function ClinicPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -34,6 +34,7 @@ export default function ClinicPage() {
     user ? setDataEdit(user) : toast.error('Không tìm thấy phòng khám')
     setOpenDrawer(true)
   }
+
   const onFinish = async (values: any) => {
     if (!dataEdit) {
       postCaller('/Clinics', values).then(() => {
@@ -48,12 +49,12 @@ export default function ClinicPage() {
     }
     await handleGetData()
     setOpenDrawer(false)
-    form.resetFields()
     setDataEdit(undefined)
+    form.resetFields()
+    window.location.reload()
   }
 
-  const dataSource =
-    data &&
+  const dataSource = (data: IClinic[]) =>
     data?.map((items, index) => {
       return {
         stt: index + 1,
@@ -132,32 +133,29 @@ export default function ClinicPage() {
   useDebounce(
     () => {
       if (search) {
-        console.log(2)
         setData(
-          data &&
-            data.filter(
-              (d) =>
-                d.clinicName.includes(search) ||
-                (d.clinicName && d.clinicName.toUpperCase().includes(search.toUpperCase()))
-            )
+          data?.filter(
+            (d) =>
+              d.clinicName.includes(search) ||
+              (d.clinicName && d.clinicName.toUpperCase().includes(search.toUpperCase()))
+          )
         )
       }
     },
-    [],
+    [search, data],
     800
   )
 
   const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value.trim())
-  }
-  console.log(dataEdit, ':::')
+  } 
   return (
     <>
       <Breadcrumb
         pageName='Phòng khám'
         openDrawer={() => {
           setOpenDrawer(true)
-          form.resetFields()
+
           setDataEdit(undefined)
         }}
       />
@@ -176,7 +174,7 @@ export default function ClinicPage() {
         />
       </div>
 
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource(data || [])} columns={columns} />
       <Drawer
         title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} phòng khám`}
         placement='right'

@@ -1,4 +1,4 @@
-import { Button, Drawer, Table } from 'antd'
+import { Button, Drawer, Form, Table } from 'antd'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
@@ -12,6 +12,7 @@ export default function UserPage() {
   const [dataEdit, setDataEdit] = useState<IUsers>()
   const [dataRoles, setDataRoles] = useState<IUsers[]>()
   const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
+  const [form] = Form.useForm()
 
   const handleGetData = async () => {
     const data = await getCaller<IUsers[]>('User')
@@ -23,9 +24,10 @@ export default function UserPage() {
   useEffect(() => {
     handleGetData()
   }, [])
+
   const onFinish = async (values: any) => {
     if (!dataEdit?.id) {
-      await postCaller('/User', {...values, })
+      await postCaller('/User', { ...values })
       toast.success('Thêm người dùng thành công!')
     } else {
       await putCaller(`User/${dataEdit.id}`, {
@@ -33,12 +35,8 @@ export default function UserPage() {
         email: values.email,
         phone: values.phone
       })
-      // if (dataEdit.roleName !== values.roleName) {
-      //   await postCaller(`User/update/role-user/${dataEdit.id}`, {
-      //     userId: 0
-      //   })
-      // }
-      if (values.passWord) {
+
+      if (dataEdit.password != values.passWord) {
         await postCaller(`User/update/passWord/${dataEdit.id}`, {
           passWord: values.passWord
         })
@@ -47,6 +45,8 @@ export default function UserPage() {
     }
     await handleGetData()
     setOpenDrawer(false)
+    setDataEdit(undefined)
+    form.resetFields()
   }
   const dataSource = dataRoles?.map((items, index) => {
     return {
@@ -109,10 +109,10 @@ export default function UserPage() {
               Edit
             </Button>
             <Button
-              onClick={async() => {
+              onClick={async () => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
-                await  deleteCaller(`/User/${key}`)
-                await handleGetData()
+                  await deleteCaller(`/User/${key}`)
+                  await handleGetData()
                 }
               }}
             >
@@ -126,7 +126,13 @@ export default function UserPage() {
 
   return (
     <>
-      <Breadcrumb pageName='Người dùng' openDrawer={() => setOpenDrawer(true)} />
+      <Breadcrumb
+        pageName='Người dùng'
+        openDrawer={() => {
+          setOpenDrawer(true)
+          setDataEdit(undefined)
+        }}
+      />
 
       <Table dataSource={dataSource} columns={columns} />
       <Drawer
@@ -136,7 +142,7 @@ export default function UserPage() {
         onClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
-        <UserCreate dataUser={dataEdit} onFinish={onFinish} />
+        <UserCreate form={form} dataUser={dataEdit} onFinish={onFinish} />
       </Drawer>
     </>
   )

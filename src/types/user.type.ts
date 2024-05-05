@@ -6,6 +6,7 @@ export interface IUsers {
   address: string
   phone: string
   roleName: string
+  password?: string
 }
 // export interface IUsers {
 //   id: number

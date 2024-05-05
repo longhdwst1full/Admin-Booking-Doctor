@@ -21,13 +21,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     const handelGetIdService = async () => {
-      const { data } = await axios.get('http://localhost:7212/api/Services')
-      const { data: dataAppoinments } = await axios.get(
-        'http://localhost:7212/api/Appointments' + authData?.user.userId
+      const { data } = await getCaller<IServices[]>('Services')
+      const { data: dataAppoinments } = await getCaller<IAppointment[]>(
+        '/Appointments' + authData?.user.userId
       )
-      const { data: dataUser } = await axios.get('http://localhost:7212/api/User')
-      const { data: clinics } = await axios.get('http://localhost:7212/api/Clinics')
-      const { data: doctors } = await axios.get('http://localhost:7212/api/Doctors')
+      const { data: dataUser } = await getCaller<IUsers[]>('/User')
+      const { data: clinics } = await getCaller<IClinic[]>('/Clinics')
+      const { data: doctors } = await getCaller<IDoctor[]>('/Doctors')
       console.log(data, 'pl')
       setDataService(data)
       setDataDoctor(doctors)

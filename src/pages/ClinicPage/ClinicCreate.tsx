@@ -10,11 +10,13 @@ interface Props {
 }
 
 export default function ClinicCreate({ dataUser, onFinish, form }: Props) {
-  useEffect(() => { 
+  useEffect(() => {
     if (dataUser && dataUser.clinicID) {
       form.setFieldValue('clinicName', dataUser.clinicName)
       form.setFieldValue('address', dataUser.address)
       form.setFieldValue('phone', dataUser.phone)
+    } else {
+      form.resetFields()
     }
   }, [form, dataUser])
 

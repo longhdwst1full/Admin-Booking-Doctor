@@ -1,18 +1,19 @@
-import { Button, Form, Input } from 'antd'
+import { Button, Form, FormInstance, Input } from 'antd'
 import { useEffect } from 'react'
 import { ISpecialty } from '~/types/specialties.type'
 
 interface Props {
   dataEdit?: ISpecialty
+  form: FormInstance<any>
   onFinish: (values: any) => Promise<void>
 }
-const SpecialtyCreate = ({ dataEdit, onFinish }: Props) => {
-  const [form] = Form.useForm()
-
+const SpecialtyCreate = ({ dataEdit, form, onFinish }: Props) => {
   useEffect(() => {
     if (dataEdit) {
       console.log(dataEdit)
       form.setFieldValue('specialtyName', dataEdit.specialtyName)
+    } else {
+      form.resetFields()
     }
   }, [form, dataEdit])
 

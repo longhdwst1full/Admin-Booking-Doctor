@@ -1,5 +1,5 @@
-import { Button, Drawer, Input, Table } from 'antd'
-import { useEffect, useState } from 'react'
+import { Button, Drawer, Form, Input, Table } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 import { useSevices } from '~/configs/useSevice'
@@ -11,6 +11,9 @@ import TitlePage from '~/components/TitlePage'
 export default function SpecialtyPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [dataEdit, setDataEdit] = useState<ISpecialty>()
+  const [form] = Form.useForm()
+  const [serviceName, setserviceName] = useState('')
+
   const [dataSpecialty, setDataSpecialty] = useState<ISpecialty[]>()
   const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
 
@@ -35,30 +38,38 @@ export default function SpecialtyPage() {
       toast.error('Không tìm thấy phòng khám')
     }
   }
+
   const onFinish = async (values: any) => {
     var dataBody = {
-      specialtyName: values.username
+      specialtyName: values.specialtyName
     }
     if (!dataEdit?.specialtyID) {
-      await postCaller('Specialty', dataBody)
+      postCaller('Specialty', dataBody).then(() => {
+        toast.success('Thêm thành công')
+      })
     } else {
-      putCaller(`Specialty/${dataEdit.specialtyID}`, { ...dataBody })
-        .then(() => {
-          toast.success('Update success')
-        })
-        .catch((e) => toast.error(e))
+      putCaller(`Specialty/${dataEdit.specialtyID}`, { ...dataBody }).then(() => {
+        toast.success('Update success')
+      })
     }
     await handleGetData()
     setOpenDrawer(false)
+    setDataEdit(undefined)
+    form.resetFields()
   }
 
-  const dataSource = dataSpecialty?.map((items, index) => {
-    return {
-      stt: index + 1,
-      key: items.specialtyID,
-      name: items.specialtyName
-    }
-  })
+  const dataSource = useMemo(
+    () =>
+      dataSpecialty?.map((items, index) => {
+        return {
+          stt: index + 1,
+          key: items.specialtyID,
+          name: items.specialtyName
+        }
+      }),
+    [dataSpecialty]
+  )
+
   const columns = [
     {
       title: '#',
@@ -99,31 +110,41 @@ export default function SpecialtyPage() {
     }
   ]
 
-  const [serviceName, setserviceName] = useState('')
-
   useDebounce(
     () => {
-      if (dataSpecialty) {
-        setDataSpecialty(
-          dataSpecialty.filter(
-            (d) =>
-              d.specialtyName.includes(serviceName) ||
-              (d.specialtyName && d.specialtyName.toUpperCase().includes(serviceName.toUpperCase()))
-          )
+      if (serviceName) {
+        const res = dataSpecialty?.filter(
+          (d) =>
+            d.specialtyName.includes(serviceName) ||
+            (d.specialtyName && d.specialtyName.toUpperCase().includes(serviceName.toUpperCase()))
         )
+
+        setDataSpecialty(res)
+      } else {
+        serviceName == '' && setDataSpecialty(dataSpecialty)
       }
     },
-    [],
+    [serviceName, dataSpecialty],
     800
   )
 
   const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setserviceName(e.target.value.trim())
+    if (e.target.value.trim()) {
+      setserviceName(e.target.value.trim())
+    } else {
+      setserviceName('')
+    }
   }
 
   return (
     <div>
-      <Breadcrumb pageName='Chuyên Khoa' openDrawer={() => setOpenDrawer(true)} />
+      <Breadcrumb
+        pageName='Chuyên Khoa'
+        openDrawer={() => {
+          setOpenDrawer(true)
+          setDataEdit(undefined)
+        }}
+      />
 
       <div className='flex justify-between'>
         <TitlePage title='Quản lý chuyên khoa' />
@@ -146,7 +167,7 @@ export default function SpecialtyPage() {
         onClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
-        <SpecialtyCreate dataEdit={dataEdit ?? dataEdit} onFinish={onFinish} />
+        <SpecialtyCreate form={form} dataEdit={dataEdit ?? dataEdit} onFinish={onFinish} />
       </Drawer>
     </div>
   )

@@ -15,6 +15,7 @@ export default function ServicesPage() {
   const [serviceName, setserviceName] = useState('')
   const [dataTable, setDataTable] = useState<any>([])
   const [dataSpecialty, setDataSpecialty] = useState<IServices[]>([])
+
   const handelFetchData = async () => {
     const { data } = await axios.get(URL + '/Services')
     setDataSpecialty(data)
@@ -44,6 +45,7 @@ export default function ServicesPage() {
     }))
     dataSource && setDataTable(dataSource)
   }, [dataSpecialty])
+
   const columns = [
     {
       title: '#',
@@ -99,9 +101,8 @@ export default function ServicesPage() {
   useDebounce(
     () => {
       if (serviceName) {
-        console.log(dataSpecialty)
         setDataSpecialty(
-          dataSpecialty.filter(
+          dataSpecialty?.filter(
             (d) =>
               d.serviceName.includes(serviceName) ||
               (d.serviceName && d.serviceName.toUpperCase().includes(serviceName.toUpperCase()))
@@ -109,7 +110,7 @@ export default function ServicesPage() {
         )
       }
     },
-    [],
+    [serviceName, dataSpecialty],
     800
   )
 
@@ -120,7 +121,13 @@ export default function ServicesPage() {
 
   return (
     <div>
-      <Breadcrumb pageName='Dịch vụ' openDrawer={() => setOpenDrawer(true)} />
+      <Breadcrumb
+        pageName='Dịch vụ'
+        openDrawer={() => {
+          setOpenDrawer(true)
+          setDataEdit(undefined)
+        }}
+      />
 
       <div className='flex justify-between'>
         <TitlePage title='Quản lý dịch vụ' />
@@ -137,10 +144,13 @@ export default function ServicesPage() {
       </div>
       <Table dataSource={dataTable} columns={columns} />
       <Drawer
-        title={`${true ? 'Thêm' : 'Cập nhật'} dịch vụ`}
+        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} dịch vụ`}
         placement='right'
         width={700}
-        onClose={() => setOpenDrawer(!openDrawer)}
+        onClose={() => {
+          setOpenDrawer(!openDrawer)
+          setDataEdit(undefined)
+        }}
         open={openDrawer}
       >
         <CreateServices dataEdit={dataEdit} />
