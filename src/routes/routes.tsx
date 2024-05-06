@@ -5,11 +5,9 @@ import DefaultLayout from '~/layouts/DefaultLayout/DefaultLayout'
 import AppointmentPage from '~/pages/AppointmentPage/AppointmentPage'
 import ChangePassword from '~/pages/ChangePass'
 import ClinicPage from '~/pages/ClinicPage/ClinicPage'
-import CustomerPage from '~/pages/CustomerPage/CustomerPage'
 import Dashboard from '~/pages/Dashboard/Dashboard'
 import DoctorPage from '~/pages/Doctor/DoctorPage'
 import NotFound from '~/pages/NotFound/NotFound'
-import OrderPage from '~/pages/OrdersPage/OrderPage'
 import ProfilePage from '~/pages/Profile/profile-page'
 import RolePage from '~/pages/RolePage/RolePage'
 import { default as ServicesPage } from '~/pages/ServicesPage/ServicesPage'
@@ -44,7 +42,7 @@ const routers = createBrowserRouter([
           { path: 'role', element: <RolePage /> },
 
           { path: 'appointments', element: <AppointmentPage /> },
-          { path: 'customers', element: <CustomerPage /> },
+        
           { path: 'users', element: <UserPage /> },
           { path: 'starts', element: <StaffPage /> },
           { path: 'clinic', element: <ClinicPage /> },

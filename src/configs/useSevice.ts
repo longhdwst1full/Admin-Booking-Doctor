@@ -1,6 +1,6 @@
-import { getAuthLocalData } from "./token";
-import http from "./instances";
 import toast from "react-hot-toast";
+import http from "./instances";
+import { getAuthLocalData } from "./token";
 
 
 
@@ -44,8 +44,7 @@ export const useSevices = () => {
       );
       return Promise.resolve(res);
     } catch (err: any) {
-
-      toast.error(err.message)
+      toast.error(err?.response?.data?.title || err.message)
     }
   };
   const putCaller = async <T, R>(
@@ -64,7 +63,7 @@ export const useSevices = () => {
 
       return (res);
     } catch (err: any) {
-console.log(err)
+      console.log(err)
       toast.error(err?.response?.data?.title)
     }
   };

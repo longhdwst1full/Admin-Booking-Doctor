@@ -1,7 +1,7 @@
 import SunIcon from '~/components/Icons/SunIcon'
 import { useColorMode } from '~/hooks'
+import { useAppDispatch } from '~/store/hooks'
 import { setTheme } from '~/store/slices/theme.slice'
-import { useAppDispatch } from '~/store/store'
 
 const DarkModeSwitcher = () => {
   const [colorMode, setColorMode] = useColorMode()

@@ -1,6 +1,6 @@
 import { Button, Drawer, Input, Table } from 'antd'
 import axios from 'axios'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 import TitlePage from '~/components/TitlePage'
@@ -13,7 +13,6 @@ export default function ServicesPage() {
   const URL = import.meta.env.VITE_API
   const [dataEdit, setDataEdit] = useState<IServices>()
   const [serviceName, setserviceName] = useState('')
-  const [dataTable, setDataTable] = useState<any>([])
   const [dataSpecialty, setDataSpecialty] = useState<IServices[]>([])
 
   const handelFetchData = async () => {
@@ -35,16 +34,13 @@ export default function ServicesPage() {
     }
   }
 
-  useEffect(() => {
-    const dataSource = dataSpecialty?.map((items, index) => ({
-      stt: index + 1,
-      key: items.serviceId,
-      name: items.serviceName,
-      description: items.description,
-      cost: items.cost
-    }))
-    dataSource && setDataTable(dataSource)
-  }, [dataSpecialty])
+  const dataSource = dataSpecialty?.reverse()?.map((items, index) => ({
+    stt: index + 1,
+    key: items.serviceId,
+    name: items.serviceName,
+    description: items.description,
+    cost: items.cost
+  }))
 
   const columns = [
     {
@@ -96,8 +92,7 @@ export default function ServicesPage() {
         )
       }
     }
-  ]
-
+  ] 
   useDebounce(
     () => {
       if (serviceName) {
@@ -108,15 +103,21 @@ export default function ServicesPage() {
               (d.serviceName && d.serviceName.toUpperCase().includes(serviceName.toUpperCase()))
           )
         )
+        console.log(3)
       }
+      console.log(1)
     },
-    [serviceName, dataSpecialty],
+    [serviceName],
     800
   )
 
   const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.value)
-    setserviceName(e.target.value.trim())
+    const value = e.target.value.trim()
+    setserviceName(value)
+    if (value == '') {
+      handelFetchData()
+    }
   }
 
   return (
@@ -142,7 +143,7 @@ export default function ServicesPage() {
           style={{ width: 200 }}
         />
       </div>
-      <Table dataSource={dataTable} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} />
       <Drawer
         title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} dịch vụ`}
         placement='right'

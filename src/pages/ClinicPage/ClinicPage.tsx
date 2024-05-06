@@ -1,6 +1,5 @@
 import { Button, Drawer, Form, Input, Table } from 'antd'
 
-import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
@@ -54,18 +53,17 @@ export default function ClinicPage() {
     window.location.reload()
   }
 
-  const dataSource = (data: IClinic[]) =>
-    data?.map((items, index) => {
-      return {
-        stt: index + 1,
-        key: items.clinicID,
-        name: items.clinicName,
-        phone: items.phone,
-        address: items.address,
-        appointments: items?.appointments ? items.appointments.length : 0,
-        services: items.services ? items.services.length : 0
-      }
-    })
+  const dataSource = data?.reverse()?.map((items, index) => {
+    return {
+      stt: index + 1,
+      key: items.clinicID,
+      name: items.clinicName,
+      phone: items.phone,
+      address: items.address,
+      appointments: items?.appointments ? items.appointments.length : 0,
+      services: items.services ? items.services.length : 0
+    }
+  })
 
   const columns = [
     {
@@ -142,12 +140,15 @@ export default function ClinicPage() {
         )
       }
     },
-    [search, data],
+    [search],
     800
   )
 
   const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value.trim())
+    if (e.target.value.trim() == '') {
+      handleGetData()
+    }
   }
   return (
     <>
@@ -174,7 +175,7 @@ export default function ClinicPage() {
         />
       </div>
 
-      <Table dataSource={dataSource(data || [])} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} />
       <Drawer
         title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} phòng khám`}
         placement='right'

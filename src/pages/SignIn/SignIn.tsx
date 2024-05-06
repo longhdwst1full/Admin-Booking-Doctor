@@ -24,10 +24,14 @@ export default function SignIn() {
     mode: 'onChange',
     resolver: yupResolver(LoginSchema)
   })
-  const onLogin = async (loginData: Login) => {
-    await postCaller('Auth/login', loginData).then(async (data: any) => {
-      console.log(data.data, '::::')
-      const dataUser = data.data.user.roleId
+  const onLogin = (loginData: Login) => {
+    postCaller('/Auth/login', {
+      ...loginData,
+      isDoctor: false
+    }).then(async (data: any) => {
+      if (!data) return false
+      console.log(data?.data, '::::')
+      const dataUser = data?.data?.user?.roleId
       const roles = await getCaller<IRole[]>('/Role')
       const roleName = roles.data.find((role) => role.id === dataUser)
 

@@ -1,17 +1,18 @@
-import { Button, Drawer, Table } from 'antd'
+import { Button, Drawer, Form, Table } from 'antd'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 
 import { useSevices } from '~/configs/useSevice'
 import { IUsers } from '~/types/user.type'
-import StaffCreate from './StaffCreate'
+import UserCreate from '../User/UserCreate'
 
 export default function StaffPage() {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [dataEdit, setDataEdit] = useState<IUsers>()
   const [dataRoles, setDataRoles] = useState<IUsers[]>()
   const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
+  const [form] = Form.useForm()
 
   const handleGetData = async () => {
     const data = await getCaller<IUsers[]>('User')
@@ -24,31 +25,37 @@ export default function StaffPage() {
   useEffect(() => {
     handleGetData()
   }, [])
-  const onFinish = async (values: any) => {
-    if (!dataEdit?.id) {
-      await postCaller('/User', { ...values })
-      toast.success('Thêm nhân viên thành công!')
-    } else {
-      await putCaller(`User/${dataEdit.id}`, {
-        userName: values.userName,
-        email: values.email,
-        phone: values.phone
-      })
-      // if (dataEdit.roleName !== values.roleName) {
-      //   await postCaller(`User/update/role-user/${dataEdit.id}`, {
-      //     userId: 0
-      //   })
-      // }
-      if (values.passWord) {
-        await postCaller(`User/update/passWord/${dataEdit.id}`, {
-          passWord: values.passWord
-        })
-      }
-      toast.success('Update nhân viên thành công!')
-    }
-    await handleGetData()
-    setOpenDrawer(false)
-  }
+ 
+   const onFinish = async (values: any) => {
+     if (!dataEdit?.id) {
+       await postCaller('/User', { ...values })
+       toast.success('Thêm người dùng thành công!')
+     } else {
+       await putCaller(`User/${dataEdit.id}`, {
+         userName: values.userName,
+         email: values.email,
+         phone: values.phone
+       })
+
+       if (dataEdit.roleName !== values.role) {
+         await postCaller(`User/update/role-user/${values.role}`, {
+           userId: dataEdit.id
+         })
+       }
+
+       if (dataEdit.password != values.passWord) {
+         await postCaller(`User/update/passWord/${dataEdit.id}`, {
+           passWord: values.passWord
+         })
+       }
+       toast.success('Update người dùng thành công!')
+     }
+     await handleGetData()
+     setOpenDrawer(false)
+     setDataEdit(undefined)
+     form.resetFields()
+   }
+
   const dataSource = dataRoles?.map((items, index) => {
     return {
       stt: index + 1,
@@ -131,13 +138,13 @@ export default function StaffPage() {
 
       <Table dataSource={dataSource} columns={columns} />
       <Drawer
-        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} người dùng`}
+        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} nhân viên`}
         placement='right'
         width={700}
         onClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
-        <StaffCreate dataUser={dataEdit} onFinish={onFinish} />
+        <UserCreate form={form} dataUser={dataEdit} onFinish={onFinish} />
       </Drawer>
     </>
   )

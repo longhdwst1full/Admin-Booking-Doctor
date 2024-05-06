@@ -6,6 +6,7 @@ import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 import { useSevices } from '~/configs/useSevice'
 import { IRole } from '~/types/user.type'
 import RoleCreate from './RoleCreate'
+import TitlePage from '~/components/TitlePage'
 
 export default function RolePage() {
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -114,7 +115,9 @@ export default function RolePage() {
           setDataEdit(undefined)
         }}
       />
-
+      <div className='flex justify-between'>
+        <TitlePage title='Quản lý chức vụ' />
+      </div>
       <Table columns={columns} dataSource={dataRoles} />
       <Drawer
         title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} chức vụ`}

@@ -1,5 +1,5 @@
-import { Button, Form, Input } from 'antd'
-import { useEffect, useState } from 'react'
+import { Button, Form, Input, InputNumber } from 'antd'
+import { useEffect } from 'react'
 import { useSevices } from '~/configs/useSevice'
 import { IServices } from '~/types/services.type'
 
@@ -30,13 +30,13 @@ export default function CreateServices({ dataEdit }: Props) {
     }
     if (!dataEdit?.serviceId) {
       postCaller('/Services', dataBody)
-        .then((items: any) => {
+        .then(() => {
           window.location.href = '/manager/services'
         })
         .catch((e) => console.log(e))
     } else {
       putCaller('/Services/' + dataEdit?.serviceId, dataBody)
-        .then((items: any) => {
+        .then(() => {
           window.location.href = '/manager/services'
         })
         .catch((e) => console.log(e))
@@ -70,7 +70,7 @@ export default function CreateServices({ dataEdit }: Props) {
         </Form.Item>
 
         <Form.Item label='Giá' name='password' rules={[{ required: true, message: 'Please input your cost!' }]}>
-          <Input />
+          <InputNumber />
         </Form.Item>
         <Form.Item
           label='Mô tả'

@@ -22,9 +22,11 @@ export default function DoctorPage() {
     const { data } = await getCaller<IDoctor[]>('/Doctors')
     setdataDoctor(data)
   }
+
   useEffect(() => {
     fetch()
   }, [])
+  
   const handleGetdataRole = (id: string) => {
     const user = dataDoctor?.find((item) => item.id === +id)
     user ? setdataEdit(user) : toast.error('Không tìm thấy bác sĩ')
@@ -104,8 +106,7 @@ export default function DoctorPage() {
       }
     }
   ]
-  console.log(dataDoctor, '::dataDoctor')
-  console.log(`.${search}.`, 'service')
+ 
   useDebounce(
     () => {
       if (search) {
@@ -121,9 +122,7 @@ export default function DoctorPage() {
     [search, dataDoctor],
     800
   )
-  // useEffect(() => {
-
-  // }, [search, dataDoctor])
+ 
   return (
     <div>
       <Breadcrumb

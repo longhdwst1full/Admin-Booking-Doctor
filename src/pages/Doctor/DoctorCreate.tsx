@@ -77,11 +77,31 @@ const DoctorCreate = ({ dataDoctor, form, onFinish }: Props) => {
             }))}
           />
         </Form.Item>
-        <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+        <Form.Item
+          label='Email'
+          name='email'
+          rules={[
+            { required: true, message: 'Trường này là bắt buộc!' },
+            {
+              type: 'email',
+              message: 'The input is not valid E-mail!'
+            }
+          ]}
+        >
           <Input type='email' />
         </Form.Item>
 
-        <Form.Item label='Mật khẩu' name='password' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+        <Form.Item
+          label='Mật khẩu'
+          name='password'
+          rules={[
+            { required: true, message: 'Trường này là bắt buộc!' },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&+=*])(?!.*\s).{8,32}$/,
+              message: 'Mật khẩu từ 8 đến 32 ký tự và bao gồm số, chữ thường, chữ in hoa và ký tự đặc biệt.'
+            }
+          ]}
+        >
           <Input.Password />
         </Form.Item>
 

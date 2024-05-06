@@ -113,6 +113,7 @@ export default function SpecialtyPage() {
   useDebounce(
     () => {
       if (serviceName) {
+console.log(333)
         const res = dataSpecialty?.filter(
           (d) =>
             d.specialtyName.includes(serviceName) ||
@@ -120,19 +121,17 @@ export default function SpecialtyPage() {
         )
 
         setDataSpecialty(res)
-      } else {
-        serviceName == '' && setDataSpecialty(dataSpecialty)
-      }
+      }  
+      console.log(3)
     },
-    [serviceName, dataSpecialty],
+    [serviceName,  ],
     800
   )
 
   const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.trim()) {
-      setserviceName(e.target.value.trim())
-    } else {
-      setserviceName('')
+    setserviceName(e.target.value.trim())
+    if (e.target.value.trim() == '') {
+      handleGetData()
     }
   }
 

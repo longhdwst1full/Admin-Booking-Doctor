@@ -44,7 +44,18 @@ export default function ClinicCreate({ dataUser, onFinish, form }: Props) {
         >
           <Input />
         </Form.Item>
-        <Form.Item label='Điện thoại' name='phone' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>
+        <Form.Item
+          label='Điện thoại'
+          name='phone'
+          rules={[
+            { required: true, message: 'Trường này là bắt buộc!' },
+            {
+              pattern: /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/,
+              message: 'Sai định dạng Số điện thoại !'
+            }
+          ]}
+          normalize={(value) => value.trim()}
+        >
           <Input />
         </Form.Item>
         <Form.Item label='Địa chỉ' name='address' rules={[{ required: true, message: 'Trường này là bắt buộc!' }]}>

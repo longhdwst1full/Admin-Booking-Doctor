@@ -14,7 +14,6 @@ export default function UserPage() {
   const [dataRoles, setDataRoles] = useState<IUsers[]>()
   const { deleteCaller, getCaller, postCaller, putCaller } = useSevices()
   const [form] = Form.useForm()
-
   const handleGetData = async () => {
     const data = await getCaller<IUsers[]>('User')
     if (data) {
@@ -36,6 +35,12 @@ export default function UserPage() {
         email: values.email,
         phone: values.phone
       })
+
+      if (dataEdit.roleName !== values.role) {
+        await postCaller(`User/update/role-user/${values.role}`, {
+          userId: dataEdit.id
+        })
+      }
 
       if (dataEdit.password != values.passWord) {
         await postCaller(`User/update/passWord/${dataEdit.id}`, {

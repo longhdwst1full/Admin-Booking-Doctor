@@ -7,13 +7,12 @@ import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 import ArrowDown from '~/components/Icons/ArrowDown'
 import ProfileIcon from '~/components/Icons/ProfileIcon'
-import { useAppSelector } from '~/store/hooks'
-import { RootState } from '~/store/store'
-import { removeAuthLocalData } from '~/configs/token'
+
+import { getAuthLocalData, removeAuthLocalData } from '~/configs/token'
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+  const user = getAuthLocalData()
   const navigate = useNavigate()
   const trigger = useRef<any>(null)
   const dropdown = useRef<any>(null)

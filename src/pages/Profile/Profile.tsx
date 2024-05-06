@@ -2,20 +2,16 @@ import './style/style.css'
 
 import { ProfileSchema, ProfileType } from './validate'
 
-import { Image } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons'
-import getBase64 from '~/utils/getBase64'
-import { messageAlert } from '~/utils/messageAlert'
-import { useAppSelector } from '~/store/hooks'
-import { useForm } from 'react-hook-form'
-import { useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useUpLoadAvartaUserMutation, useUpdateUserMutation } from '~/store/services/Users/user.service'
-
+import { Image } from 'antd'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { getAuthLocalData } from '~/configs/token'
+import getBase64 from '~/utils/getBase64'
+ 
 const Profile = () => {
-  const { user } = useAppSelector((state) => state.persistedReducer.auth)
-  const [upLoadFile, { isLoading: isUploading }] = useUpLoadAvartaUserMutation()
-  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
+   const {user}= getAuthLocalData()
+   
   const [avatar, setAvatar] = useState<any>({
     imageBase64: '',
     file: ''
@@ -26,12 +22,7 @@ const Profile = () => {
     formState: { errors }
   } = useForm<ProfileType>({
     resolver: yupResolver(ProfileSchema),
-    defaultValues: {
-      _id: user._id,
-      username: user.username,
-      account: user.account,
-      gender: user.gender
-    }
+    
   })
 
   const onHandleSubmit = (data: any) => {
@@ -39,29 +30,8 @@ const Profile = () => {
       const formData = new FormData()
       const file = avatar?.file
       formData.append('images', file)
-      upLoadFile(formData)
-        .unwrap()
-        .then(({ urls }: any) => {
-          updateUser({
-            gender: data.gender,
-            username: data.username,
-            avatar: urls[0].url,
-            _id: data._id
-          })
-            .unwrap()
-            .then(() => messageAlert('Cập nhật thành công', 'success'))
-            .catch(() => messageAlert('Cập nhật thất bại', 'error'))
-        })
-    } else {
-      updateUser({
-        gender: data.gender,
-        username: data.username,
-        _id: data._id
-      })
-        .unwrap()
-        .then(() => messageAlert('Cập nhật thành công', 'success'))
-        .catch(() => messageAlert('Cập nhật thất bại', 'error'))
-    }
+   
+    }  
   }
   const handleUploadFile = async (fileList: any) => {
     const base64Image = await getBase64(fileList[0])
@@ -272,7 +242,7 @@ const Profile = () => {
 
                 <div className='flex justify-end gap-4.5'>
                   <button
-                    disabled={isUploading || isUpdating}
+               
                     onClick={() => window.history.back()}
                     className='flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white disabled:opacity-50'
                     type='button'
@@ -280,11 +250,11 @@ const Profile = () => {
                     Quay lại
                   </button>
                   <button
-                    disabled={isUploading || isUpdating}
+                  
                     className='flex justify-center items-center gap-x-2 rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70 transition-width disabled:opacity-50'
                     type='submit'
                   >
-                    {isUploading || isUploading ? <LoadingOutlined className='text-2xl' /> : ''} Lưu
+                   Lưu
                   </button>
                 </div>
               </div>
