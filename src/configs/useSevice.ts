@@ -64,8 +64,8 @@ export const useSevices = () => {
 
       return (res);
     } catch (err: any) {
-
-      toast.error(err.message)
+console.log(err)
+      toast.error(err?.response?.data?.title)
     }
   };
   const deleteCaller = async <R>(url: string, includeAuth = true) => {

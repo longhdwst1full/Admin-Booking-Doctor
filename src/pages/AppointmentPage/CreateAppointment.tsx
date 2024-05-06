@@ -1,5 +1,4 @@
-import { Button, DatePicker, Form, Input, Select } from 'antd'
-import axios from 'axios'
+import { Button, DatePicker, Form, Select } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { useSevices } from '~/configs/useSevice'
@@ -10,6 +9,7 @@ import { IUsers } from '~/types/user.type'
 
 interface Props {
   dataEdit?: any
+  // form: FormInstance<any>
   onFinish: (values: any) => Promise<void>
 }
 
@@ -21,7 +21,7 @@ export default function CreateAppointment({ dataEdit, onFinish }: Props) {
   const [clinic, setDataClinic] = useState<IClinic[]>()
   const [disabledDate, setDataDisabled] = useState<boolean>(false)
   const { getCaller } = useSevices()
-  
+
   useEffect(() => {
     const handelGetIdService = async () => {
       const { data } = await getCaller<IServices[]>('/Services')

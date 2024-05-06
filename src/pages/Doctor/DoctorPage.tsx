@@ -32,17 +32,28 @@ export default function DoctorPage() {
   }
 
   const onFinish = async (values: any) => {
+    const changeTimeOrder = `${dayjs(values.schedule[0]).format('HH:mm')}-${dayjs(values.schedule[1]).format('HH:mm')}`
     if (!dataEdit?.id) {
       await postCaller('Doctors', {
         ...values,
-        schedule: `${dayjs(values.schedule[0]).format('HH:mm')}-${dayjs(values.schedule[1]).format('HH:mm')}`
+        schedule: changeTimeOrder
+      }).then((data) => {
+        data && toast.success('Thêm thành công')
       })
     } else {
+      if (changeTimeOrder != dataEdit?.schedule) {
+        await putCaller('Doctors/update/Schedule/' + dataEdit.id, {
+          schedule: changeTimeOrder
+        })
+      }
       await putCaller('Doctors/' + dataEdit.id, {
         ...values,
-        schedule: `${dayjs(values.schedule[0]).format('HH:mm')}-${dayjs(values.schedule[1]).format('HH:mm')}`
+        schedule: changeTimeOrder
+      }).then((data) => {
+        data && toast.success('Cập nhật thành công')
       })
     }
+
     setOpenDrawer(false)
     await fetch()
     form.resetFields()
@@ -51,26 +62,21 @@ export default function DoctorPage() {
 
   const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value.trim())
+    if (e.target.value.trim() == '') {
+      fetch()
+    }
   }
 
-  const dataSource = dataDoctor?.map((items, index) => {
-    return {
-      stt: index + 1,
-      key: items.id,
-      name: items.doctorName,
-      specialty: items.specialty
-    }
-  })
   const columns = [
     {
-      title: '#',
-      dataIndex: 'stt',
-      key: 'stt'
+      title: 'Id',
+      dataIndex: 'id',
+      key: 'id'
     },
     {
       title: 'Tên',
-      dataIndex: 'name',
-      key: 'name'
+      dataIndex: 'doctorName',
+      key: 'doctorName'
     },
     {
       title: 'Chuyên khoa',
@@ -79,14 +85,14 @@ export default function DoctorPage() {
     },
 
     {
-      render: ({ key }: any) => {
+      render: ({ id }: any) => {
         return (
           <div className='space-x-5'>
-            <Button onClick={() => handleGetdataRole(key)}>Sửa</Button>
+            <Button onClick={() => handleGetdataRole(id)}>Sửa</Button>
             <Button
               onClick={async () => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
-                  await deleteCaller('/Doctors/' + key)
+                  await deleteCaller('/Doctors/' + id)
                   await fetch()
                 }
               }}
@@ -98,7 +104,8 @@ export default function DoctorPage() {
       }
     }
   ]
-
+  console.log(dataDoctor, '::dataDoctor')
+  console.log(`.${search}.`, 'service')
   useDebounce(
     () => {
       if (search) {
@@ -114,7 +121,9 @@ export default function DoctorPage() {
     [search, dataDoctor],
     800
   )
+  // useEffect(() => {
 
+  // }, [search, dataDoctor])
   return (
     <div>
       <Breadcrumb
@@ -138,7 +147,7 @@ export default function DoctorPage() {
         />
       </div>
 
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataDoctor} columns={columns} />
       <Drawer
         title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} Bác sĩ`}
         placement='right'

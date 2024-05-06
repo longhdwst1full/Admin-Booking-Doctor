@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 
+import TitlePage from '~/components/TitlePage'
 import { useSevices } from '~/configs/useSevice'
 import { IUsers } from '~/types/user.type'
 import UserCreate from './UserCreate'
@@ -133,7 +134,9 @@ export default function UserPage() {
           setDataEdit(undefined)
         }}
       />
-
+      <div className='flex justify-between'>
+        <TitlePage title='Quản lý khách hàng' />
+      </div>
       <Table dataSource={dataSource} columns={columns} />
       <Drawer
         title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} người dùng`}
