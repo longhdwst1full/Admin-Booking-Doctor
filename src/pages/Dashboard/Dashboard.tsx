@@ -12,20 +12,20 @@ import { IUsers } from '~/types/user.type'
 export default function Dashboard() {
   const authData = getAuthLocalData()
   const { getCaller } = useSevices()
-  const [dataSevice, setDataService] = useState<IServices[]>()
-  const [dataAppointment, setDataAppoiment] = useState<IAppointment[]>()
-  const [dataUser, setDataUser] = useState<IUsers[]>()
-  const [dataDoctor, setDataDoctor] = useState<IDoctor[]>()
-  const [clinic, setDataClinic] = useState<IClinic[]>()
-  console.log(dataSevice, dataDoctor)
+  const [dataSevice, setDataService] = useState<IServices[]>([])
+  const [dataAppointment, setDataAppoiment] = useState<IAppointment[]>([])
+  const [dataUser, setDataUser] = useState<IUsers[]>([])
+  const [dataDoctor, setDataDoctor] = useState<IDoctor[]>([])
+  const [clinic, setDataClinic] = useState<IClinic[]>([])
+
   useEffect(() => {
     const handelGetIdService = async () => {
       const { data } = await getCaller<IServices[]>('Services')
-      const { data: dataAppoinments } = await getCaller<IAppointment[]>('/Appointments' + authData?.user.userId)
       const { data: dataUser } = await getCaller<IUsers[]>('/User')
       const { data: clinics } = await getCaller<IClinic[]>('/Clinics')
       const { data: doctors } = await getCaller<IDoctor[]>('/Doctors')
-      console.log(data, clinics, 'pl')
+      const { data: dataAppoinments } = await getCaller<IAppointment[]>('/Appointments/' + authData?.user.userId)
+
       setDataService(data)
       setDataDoctor(doctors)
       setDataUser(dataUser)
@@ -33,7 +33,7 @@ export default function Dashboard() {
       setDataAppoiment(dataAppoinments)
       console.log(data)
     }
-    handelGetIdService()
+    ;(async () => await handelGetIdService())()
   }, [])
 
   const analytics = [
@@ -55,7 +55,7 @@ export default function Dashboard() {
     },
     { name: 'Dịch vụ', total: dataSevice?.length || 99 }
   ]
-  console.log(analytics)
+  // console.log(analytics)
   return (
     <>
       <div className='w-full px-10 lg:pr-28'>
@@ -65,8 +65,8 @@ export default function Dashboard() {
 
       <TitlePage title='Thống kê' />
       <div className='grid grid-cols-3'>
-        {analytics.map((item) => (
-          <Link to='#'>
+        {analytics.map((item, i) => (
+          <Link to='#' key={i}>
             <div className='bg-yellow-500 rounded-lg pt-4 mb-6 block border w-[300px] h-[150px]'>
               <div className='block  px-6'>
                 {<div className='text-5xl font-semibold pb-[22px]'>{item.total}</div>}

@@ -62,18 +62,18 @@ export default function CreateServices({ dataEdit }: Props) {
         autoComplete='off'
       >
         <Form.Item
-          label='serviceName'
+          label='Tên dịch vụ'
           name='username'
           rules={[{ required: true, message: 'Please input your serviceName!' }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item label='cost' name='password' rules={[{ required: true, message: 'Please input your cost!' }]}>
+        <Form.Item label='Giá' name='password' rules={[{ required: true, message: 'Please input your cost!' }]}>
           <Input />
         </Form.Item>
         <Form.Item
-          label='description'
+          label='Mô tả'
           name='description'
           rules={[{ required: true, message: 'Please input your description!' }]}
         >

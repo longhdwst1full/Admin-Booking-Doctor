@@ -86,11 +86,11 @@ export default function UserPage() {
       dataIndex: 'email',
       key: 'email'
     },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address'
-    },
+    // {
+    //   title: 'Address',
+    //   dataIndex: 'address',
+    //   key: 'address'
+    // },
     {
       title: 'RoleName',
       dataIndex: 'roleName',

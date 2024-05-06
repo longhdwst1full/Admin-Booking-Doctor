@@ -10,9 +10,10 @@ import { Password } from '~/components/Icons/Password'
 import { PhoneIcon } from '~/components/Icons/Phone'
 import { useSevices } from '~/configs/useSevice'
 import { setAuthData } from '~/configs/token'
+import { IRole } from '~/types/user.type'
 
 export default function SignIn() {
-  const { postCaller } = useSevices()
+  const { postCaller, getCaller } = useSevices()
 
   const navigate = useNavigate()
   const {
@@ -23,16 +24,25 @@ export default function SignIn() {
     mode: 'onChange',
     resolver: yupResolver(LoginSchema)
   })
-  const onLogin = (loginData: Login) => {
-    postCaller('Auth/login', loginData).then((data: any) => {
+  const onLogin = async (loginData: Login) => {
+    await postCaller('Auth/login', loginData).then(async (data: any) => {
       console.log(data.data, '::::')
-      const dataUser = data.data.user.role
+      const dataUser = data.data.user.roleId
+      const roles = await getCaller<IRole[]>('/Role')
+      const roleName = roles.data.find((role) => role.id === dataUser)
+
+      if (roleName && roleName.name == 'admin') {
+        navigate('/dashboard')
+      } else if (roleName && roleName.name == 'doctor') {
+        navigate('/dashboard')
+      } else if (roleName && roleName.name == 'staff') {
+        navigate('/dashboard')
+      } else {
+        toast.error('Bạn không có quyền truy cập')
+        return false
+      }
       setAuthData(data.data)
-      dataUser == 'admin'
-        ? (navigate('/dashboard'), toast.success('Đăng nhập thành công'))
-        : dataUser == 'doctor'
-        ? (navigate('/dashboard'), toast.success('Đăng nhập thành công'))
-        : toast.error('Bạn không có quyền truy cập')
+      toast.success('Đăng nhập thành công')
     })
   }
   return (
