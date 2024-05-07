@@ -66,6 +66,14 @@ const menuDoctor: MenuProps['items'] = [
 
 export const handleMenu = () => {
   const user = getAuthLocalData()
-  console.log(user?.user?.role)
-  return user && user?.user?.role == 1 ? menuAdmin : user?.user?.role == 2 ? menuDoctor : menuAdmin
+
+  // const roleName = roles.data.find((role) => role.id == user.user.roleId)
+  // console.log(roleName)
+  // if (roleName && roleName.name == 'admin') {
+  return menuAdmin
+  // } else if (roleName && roleName.name == 'doctor') {
+  //   return menuDoctor
+  // } else {
+  //   return menuStaff
+  // }
 }

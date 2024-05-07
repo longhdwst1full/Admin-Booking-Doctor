@@ -85,6 +85,10 @@ const DoctorCreate = ({ dataDoctor, form, onFinish }: Props) => {
             {
               type: 'email',
               message: 'The input is not valid E-mail!'
+            },
+            {
+              pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com)(?:\.[a-zA-Z]+)?$/,
+              message: 'Email bắt buộc phải có đuôi .com.'
             }
           ]}
         >
