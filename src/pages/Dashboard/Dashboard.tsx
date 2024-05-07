@@ -17,23 +17,22 @@ export default function Dashboard() {
   const [dataUser, setDataUser] = useState<IUsers[]>([])
   const [dataDoctor, setDataDoctor] = useState<IDoctor[]>([])
   const [clinic, setDataClinic] = useState<IClinic[]>([])
-  console.log(dataSevice, clinic, dataDoctor, authData?.user, ':dât setDataDoctor')
+
   useEffect(() => {
     const handelGetIdService = async () => {
       const { data } = await getCaller<IServices[]>('Services')
       const { data: dataUser } = await getCaller<IUsers[]>('/User')
       const { data: clinics } = await getCaller<IClinic[]>('/Clinics')
       const { data: doctors } = await getCaller<IDoctor[]>('/Doctors')
-      // const { data: dataAppoinments } =
-      // authData && (await getCaller<IAppointment[]>('/Appointments/' + 2 + '/bookings'))
+      const { data: dataAppoinments } = authData && (await getCaller<IAppointment[]>('/Appointments'))
       console.log(data, clinics, doctors, dataUser, 'p333333l')
       data && setDataService(data)
       doctors && setDataDoctor(doctors)
       dataUser && setDataUser(dataUser)
       clinics && setDataClinic(clinics)
-      // dataAppoinments && setDataAppoiment(dataAppoinments)
-      console.log(data)
+      dataAppoinments && setDataAppoiment(dataAppoinments)
     }
+
     ;(async () => await handelGetIdService())()
   }, [])
 

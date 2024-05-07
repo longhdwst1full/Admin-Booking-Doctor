@@ -5,7 +5,7 @@ import { FaClipboardList, FaListUl, FaPeopleArrows, FaUserFriends } from 'react-
 
 import type { MenuProps } from 'antd'
 import { NavLink } from 'react-router-dom'
-import { getAuthLocalData } from '~/configs/token'
+import { getAuthLocalData, removeAuthLocalData } from '~/configs/token'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -27,8 +27,6 @@ function getItem(
 const menuStaff: MenuProps['items'] = [
   // quản lý sản phẩm
   getItem('Quản lý', 'manager', <AiOutlineControl />, [
-    // getItem(<NavLink to={`/manager/doctor`}>Bác sĩ</NavLink>, 'doctor', <ShoppingOutlined />),
-
     getItem(<NavLink to={`/manager/appointments`}>Cuộc hẹn</NavLink>, 'Appointments', <FaListUl />)
   ])
 ]
@@ -55,7 +53,6 @@ const menuAdmin: MenuProps['items'] = [
 ]
 const menuDoctor: MenuProps['items'] = [
   getItem('Quản lý', 'manager', <AiOutlineControl />, [
-    getItem(<NavLink to={`/manager/doctor`}>Bác sĩ</NavLink>, 'doctor', <ShoppingOutlined />),
     getItem(<NavLink to={`/manager/clinic`}>Phòng Khám</NavLink>, 'clinic', <BiSolidCategoryAlt />),
     getItem(<NavLink to={`/manager/services`}>Dịch vụ</NavLink>, 'services', <BiSolidCategoryAlt />),
 
@@ -67,13 +64,10 @@ const menuDoctor: MenuProps['items'] = [
 export const handleMenu = () => {
   const user = getAuthLocalData()
 
-  // const roleName = roles.data.find((role) => role.id == user.user.roleId)
-  // console.log(roleName)
-  // if (roleName && roleName.name == 'admin') {
-  return menuAdmin
-  // } else if (roleName && roleName.name == 'doctor') {
-  //   return menuDoctor
-  // } else {
-  //   return menuStaff
-  // }
+  if (!user) {
+    removeAuthLocalData()
+    window.location.reload()
+  }
+  const role = user.user.roleName
+  return role == 'admin' ? menuAdmin : role == 'doctor' ? menuDoctor : menuStaff
 }

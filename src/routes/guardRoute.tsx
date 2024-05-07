@@ -7,5 +7,5 @@ interface Props {
 export const GuardAccount = ({ JSX }: Props) => {
   const getAuth = getAuthLocalData()
 
-  return  (getAuth?.user  ) ? <JSX /> : <Navigate to='/dashboard' />
+  return getAuth?.user ? <JSX /> : <Navigate to='/dashboard' />
 }

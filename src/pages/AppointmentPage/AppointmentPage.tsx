@@ -1,4 +1,4 @@
-import { Button, Drawer, Table } from 'antd'
+import { Button, Drawer, Form, Table } from 'antd'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
@@ -9,41 +9,44 @@ import CreateAppointment from './CreateAppointment'
 export default function AppointmentPage() {
   const [dataEdit, setDataEdit] = useState<IAppointment>()
   const [openDrawer, setOpenDrawer] = useState(false)
-
+  const [form] = Form.useForm()
   const [dataAppointment, setDataAppointment] = useState<IAppointment[]>()
-  const [dataUserBooking, setDataUserBooking] = useState<IAppointment[]>()
-  const [dataDoctorAppointment, setDataDoctorAppointment] = useState<IAppointment[]>()
-  const { getCaller, postCaller } = useSevices()
 
-  const handleGetData = async (userId?: string, doctorId?: string) => {
+  // const [dataDoctorAppointment, setDataDoctorAppointment] = useState<IAppointment[]>()
+  const { getCaller, postCaller } = useSevices()
+  const handleGetData = async () => {
     const data = await getCaller<IAppointment[]>('/Appointments')
-    const dataUserBooking = await getCaller<IAppointment[]>(`/Appointments/${userId}/bookings`)
-    const dataDoctorAppointment = await getCaller<IAppointment[]>(`/Appointments/${doctorId}/selected-users`)
-    if (data || dataUserBooking || dataDoctorAppointment) {
+    // const dataDoctorAppointment = await getCaller<IAppointment[]>(`/Appointments/${doctorId}/selected-users`)
+    if (data) {
       setDataAppointment(data.data)
-      setDataDoctorAppointment(dataDoctorAppointment.data)
-      setDataUserBooking(dataUserBooking.data)
+      // setDataDoctorAppointment(dataDoctorAppointment.data)
     }
   }
   const handleGetdataEdit = (id: string) => {
     const user = dataAppointment?.find((item) => item.appointmentId === +id)
     user ? setDataEdit(user) : toast.error('Không tìm thấy chức vụ')
+    setOpenDrawer(true)
   }
+
   useEffect(() => {
     handleGetData()
   }, [])
 
   const onFinish = async (values: any) => {
-    if (!dataEdit?.appointmentId) {
+    if (!dataEdit) {
       await postCaller('/Appointments/' + values.userID, values)
       toast.success('Thêm cuộc hẹn thành công!')
     } else {
-      await postCaller(`/Appointments/update/${dataEdit.appointmentId}`, {
+      const dataRes = await postCaller(`/Appointments/update/${dataEdit.appointmentId}`, {
         status: values.status
       })
+      console.log(dataRes)
       toast.success('Update cuộc hẹn thành công!')
     }
     await handleGetData()
+    form.resetFields()
+    setOpenDrawer(false)
+    setDataEdit(undefined)
   }
   const dataSource = dataAppointment?.map((items, index: number) => {
     return {
@@ -132,17 +135,23 @@ export default function AppointmentPage() {
 
   return (
     <div>
-      <Breadcrumb pageName='Cuộc hẹn' openDrawer={() => setOpenDrawer(true)} />
+      <Breadcrumb
+        pageName='Cuộc hẹn'
+        openDrawer={() => {
+          setOpenDrawer(true)
+          setDataEdit(undefined)
+        }}
+      />
 
       <Table dataSource={dataSource} columns={columns} />
       <Drawer
-        title={`${true ? 'Thêm' : 'Cập nhật'} cuộc hẹn`}
+        title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} cuộc hẹn`}
         placement='right'
         width={700}
-        onClose={() => setOpenDrawer(!openDrawer)}
+        onClose={() => setOpenDrawer(false)}
         open={openDrawer}
       >
-        <CreateAppointment onFinish={onFinish} dataEdit={dataEdit} />
+        <CreateAppointment form={form} onFinish={onFinish} dataEdit={dataEdit} />
       </Drawer>
     </div>
   )

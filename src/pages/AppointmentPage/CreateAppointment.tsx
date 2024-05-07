@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Select } from 'antd'
+import { Button, DatePicker, Form, FormInstance, Select } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { useSevices } from '~/configs/useSevice'
@@ -9,45 +9,42 @@ import { IUsers } from '~/types/user.type'
 
 interface Props {
   dataEdit?: any
-  // form: FormInstance<any>
+  form: FormInstance<any>
   onFinish: (values: any) => Promise<void>
 }
 
-export default function CreateAppointment({ dataEdit, onFinish }: Props) {
-  const [form] = Form.useForm()
+export default function CreateAppointment({ dataEdit, onFinish, form }: Props) {
+  console.log(dataEdit)
   const [dataSevice, setDataService] = useState<IServices[]>()
   const [dataUser, setDataUser] = useState<IUsers[]>()
   const [dataDoctor, setDataDoctor] = useState<IDoctor[]>()
   const [clinic, setDataClinic] = useState<IClinic[]>()
-  const [disabledDate, setDataDisabled] = useState<boolean>(false)
+
   const { getCaller } = useSevices()
 
   useEffect(() => {
     const handelGetIdService = async () => {
-      const { data } = await getCaller<IServices[]>('/Services')
-      const { data: dataUser } = await getCaller<IUsers[]>('/User')
-      const { data: clinics } = await getCaller<IClinic[]>('/Clinics')
-      const { data: doctors } = await getCaller<IDoctor[]>('/Doctors')
-      console.log(data, 'pl')
-      setDataService(data)
-      setDataDoctor(doctors)
-      setDataUser(dataUser)
-      setDataClinic(clinics)
+      if (!dataEdit) {
+        const { data } = await getCaller<IServices[]>('/Services')
+        const { data: dataUser } = await getCaller<IUsers[]>('/User')
+        const { data: clinics } = await getCaller<IClinic[]>('/Clinics')
+        const { data: doctors } = await getCaller<IDoctor[]>('/Doctors')
+        setDataService(data)
+        setDataDoctor(doctors)
+        setDataClinic(clinics)
+        setDataUser(dataUser)
+      }
     }
     handelGetIdService()
   }, [])
 
   useEffect(() => {
     if (dataEdit) {
-      form.setFieldValue('userID', dataEdit.userID)
-      form.setFieldValue('doctorID', dataEdit.doctorID)
-      form.setFieldValue('clinicID', dataEdit.clinicID)
-      form.setFieldValue('appointmentDate', dataEdit.appointmentDate)
-      form.setFieldValue('serviceIDs', dataEdit.serviceIDs)
       form.setFieldValue('status', dataEdit.status)
-      setDataDisabled(true)
+    } else {
+      form.resetFields()
     }
-  }, [form, dataSevice])
+  }, [form, dataEdit])
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
@@ -66,79 +63,89 @@ export default function CreateAppointment({ dataEdit, onFinish }: Props) {
         onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        {/* user */}
-        <Form.Item label='Người đặt' name='userID' rules={[{ required: true, message: 'Required!' }]}>
-          <Select
-            showSearch
-            disabled={disabledDate}
-            style={{ width: 200 }}
-            placeholder='Search to Select'
-            optionFilterProp='children'
-            filterOption={(input, option) => (option?.label ?? '').includes(input)}
-            filterSort={(optionA, optionB) =>
-              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-            }
-            options={dataUser?.map((item) => ({
-              value: item.id,
-              label: item.userName
-            }))}
-          />
-        </Form.Item>
-        {/* doctorId */}
-        <Form.Item label='Bác sĩ' name='doctorID' rules={[{ required: true, message: 'Required!' }]}>
-          <Select
-            showSearch
-            disabled={disabledDate}
-            style={{ width: 200 }}
-            placeholder='Search to Select'
-            optionFilterProp='children'
-            filterOption={(input, option) => (option?.label ?? '').includes(input)}
-            filterSort={(optionA, optionB) =>
-              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-            }
-            options={dataDoctor?.map((item) => ({
-              value: item.id,
-              label: item.doctorName
-            }))}
-          />
-        </Form.Item>
-        {/*clinicID  */}
-        <Form.Item label='Phòng khám' name='clinicID' rules={[{ required: true, message: 'Required!' }]}>
-          <Select
-            showSearch
-            disabled={disabledDate}
-            style={{ width: 200 }}
-            placeholder='Search to Select'
-            optionFilterProp='children'
-            filterOption={(input, option) => (option?.label ?? '').includes(input)}
-            filterSort={(optionA, optionB) =>
-              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-            }
-            options={clinic?.map((item) => ({
-              value: item.clinicID,
-              label: item.clinicName
-            }))}
-          />
-        </Form.Item>
-        {/* serviceIDs */}
-        <Form.Item label='Dịch vụ' name='serviceIDs' rules={[{ required: true, message: 'Required!' }]}>
-          <Select
-            mode='multiple'
-            showSearch
-            disabled={disabledDate}
-            style={{ width: 200 }}
-            placeholder='Search to Select'
-            optionFilterProp='children'
-            filterOption={(input, option) => (option?.label ?? '').includes(input)}
-            filterSort={(optionA, optionB) =>
-              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-            }
-            options={dataSevice?.map((item) => ({
-              value: `${item.serviceId}`,
-              label: item.serviceName
-            }))}
-          />
-        </Form.Item>
+        {!dataEdit && (
+          <>
+            {/* user */}
+            <Form.Item label='Người đặt' name='userID' rules={[{ required: true, message: 'Required!' }]}>
+              <Select
+                showSearch
+                style={{ width: 200 }}
+                placeholder='Search to Select'
+                optionFilterProp='children'
+                filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                filterSort={(optionA, optionB) =>
+                  (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                }
+                options={dataUser?.map((item) => ({
+                  value: item.id,
+                  label: item.userName
+                }))}
+              />
+            </Form.Item>
+            {/* doctorId */}
+            <Form.Item label='Bác sĩ' name='doctorID' rules={[{ required: true, message: 'Required!' }]}>
+              <Select
+                showSearch
+                style={{ width: 200 }}
+                placeholder='Search to Select'
+                optionFilterProp='children'
+                filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                filterSort={(optionA, optionB) =>
+                  (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                }
+                options={dataDoctor?.map((item) => ({
+                  value: item.id,
+                  label: item.doctorName
+                }))}
+              />
+            </Form.Item>
+            {/*clinicID  */}
+            <Form.Item label='Phòng khám' name='clinicID' rules={[{ required: true, message: 'Required!' }]}>
+              <Select
+                showSearch
+                style={{ width: 200 }}
+                placeholder='Search to Select'
+                optionFilterProp='children'
+                filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                filterSort={(optionA, optionB) =>
+                  (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                }
+                options={clinic?.map((item) => ({
+                  value: item.clinicID,
+                  label: item.clinicName
+                }))}
+              />
+            </Form.Item>
+            {/* serviceIDs */}
+            <Form.Item label='Dịch vụ' name='serviceIDs' rules={[{ required: true, message: 'Required!' }]}>
+              <Select
+                mode='multiple'
+                showSearch
+                style={{ width: 200 }}
+                placeholder='Search to Select'
+                optionFilterProp='children'
+                filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                filterSort={(optionA, optionB) =>
+                  (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                }
+                options={dataSevice?.map((item) => ({
+                  value: `${item.serviceId}`,
+                  label: item.serviceName
+                }))}
+              />
+            </Form.Item>
+
+            {/* date */}
+            <Form.Item label='Hẹn ngày' name='appointmentDate' rules={[{ required: true, message: 'Required!' }]}>
+              <DatePicker
+                disabledDate={(current) =>
+                  dayjs().subtract(1, 'day').isAfter(current) || dayjs().add(1, 'month').isBefore(current)
+                }
+              />
+            </Form.Item>
+          </>
+        )}
+
         {/* status */}
         <Form.Item label='Trạng thái' name='status' rules={[{ required: true, message: 'Required!' }]}>
           <Select
@@ -152,19 +159,22 @@ export default function CreateAppointment({ dataEdit, onFinish }: Props) {
             }
             options={[
               {
-                value: '0',
-                label: '0'
+                value: 'scheduled',
+                label: 'scheduled'
+              },
+              {
+                value: 'canceled',
+                label: 'canceled'
+              },
+              {
+                value: 'payed',
+                label: 'payed'
+              },
+              {
+                value: 'done ',
+                label: 'done '
               }
             ]}
-          />
-        </Form.Item>
-        {/* date */}
-        <Form.Item label='Hẹn ngày' name='appointmentDate' rules={[{ required: true, message: 'Required!' }]}>
-          <DatePicker
-            disabled={disabledDate}
-            disabledDate={(current) =>
-              dayjs().subtract(1, 'day').isAfter(current) || dayjs().add(1, 'month').isBefore(current)
-            }
           />
         </Form.Item>
 

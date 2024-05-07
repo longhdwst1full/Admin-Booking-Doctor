@@ -17,44 +17,43 @@ export default function StaffPage() {
   const handleGetData = async () => {
     const data = await getCaller<IUsers[]>('User')
     if (data) {
-      setDataRoles(data.data.filter((item) => item.roleName == 'staff'))
-
+      setDataRoles(data.data)
     }
   }
 
   useEffect(() => {
     handleGetData()
   }, [])
- 
-   const onFinish = async (values: any) => {
-     if (!dataEdit?.id) {
-       await postCaller('/User', { ...values })
-       toast.success('Thêm người dùng thành công!')
-     } else {
-       await putCaller(`User/${dataEdit.id}`, {
-         userName: values.userName,
-         email: values.email,
-         phone: values.phone
-       })
 
-       if (dataEdit.roleName !== values.role) {
-         await postCaller(`User/update/role-user/${values.role}`, {
-           userId: dataEdit.id
-         })
-       }
+  const onFinish = async (values: any) => {
+    if (!dataEdit?.id) {
+      await postCaller('/User', { ...values })
+      toast.success('Thêm người dùng thành công!')
+    } else {
+      await putCaller(`User/${dataEdit.id}`, {
+        userName: values.userName,
+        email: values.email,
+        phone: values.phone
+      })
 
-       if (dataEdit.password != values.passWord) {
-         await postCaller(`User/update/passWord/${dataEdit.id}`, {
-           passWord: values.passWord
-         })
-       }
-       toast.success('Update người dùng thành công!')
-     }
-     await handleGetData()
-     setOpenDrawer(false)
-     setDataEdit(undefined)
-     form.resetFields()
-   }
+      if (dataEdit.roleName !== values.role) {
+        await postCaller(`User/update/role-user/${values.role}`, {
+          userId: dataEdit.id
+        })
+      }
+
+      if (dataEdit.password != values.passWord) {
+        await postCaller(`User/update/passWord/${dataEdit.id}`, {
+          passWord: values.passWord
+        })
+      }
+      toast.success('Update người dùng thành công!')
+    }
+    await handleGetData()
+    setOpenDrawer(false)
+    setDataEdit(undefined)
+    form.resetFields()
+  }
 
   const dataSource = dataRoles?.map((items, index) => {
     return {
@@ -141,7 +140,10 @@ export default function StaffPage() {
         title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} nhân viên`}
         placement='right'
         width={700}
-        onClose={() => setOpenDrawer(!openDrawer)}
+        onClose={() => {
+          setOpenDrawer(true)
+          setDataEdit(undefined)
+        }}
         open={openDrawer}
       >
         <UserCreate form={form} dataUser={dataEdit} onFinish={onFinish} />

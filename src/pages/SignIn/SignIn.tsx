@@ -31,15 +31,9 @@ export default function SignIn() {
     }).then(async (data: any) => {
       if (!data) return false
       console.log(data?.data, '::::')
-      const dataUser = data?.data?.user?.roleId
-      const roles = await getCaller<IRole[]>('/Role')
-      const roleName = roles.data.find((role) => role.id === dataUser)
+      const dataUser = data?.data?.user?.roleName
 
-      if (roleName && roleName.name == 'admin') {
-        navigate('/dashboard')
-      } else if (roleName && roleName.name == 'doctor') {
-        navigate('/dashboard')
-      } else if (roleName && roleName.name == 'staff') {
+      if (['admin', 'doctor', 'staff'].includes(dataUser)) {
         navigate('/dashboard')
       } else {
         toast.error('Bạn không có quyền truy cập')

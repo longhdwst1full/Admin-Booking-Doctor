@@ -28,6 +28,7 @@ export const getAuthLocalData = () => {
 
 export const removeAuthLocalData = () => {
   localStorage.removeItem(TOKEN_KEY);
+  window.location.href = `${window.location.origin}/` as string;
 };
 
 export const getToken = () => {
