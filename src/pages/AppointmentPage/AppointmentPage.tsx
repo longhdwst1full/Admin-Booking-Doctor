@@ -24,7 +24,7 @@ export default function AppointmentPage() {
   }
   const handleGetdataEdit = (id: string) => {
     const user = dataAppointment?.find((item) => item.appointmentId === +id)
-    user ? setDataEdit(user) : toast.error('Không tìm thấy chức vụ')
+    user ? setDataEdit(user) : toast.error('Không tìm thấy cuộc hẹn')
     setOpenDrawer(true)
   }
 

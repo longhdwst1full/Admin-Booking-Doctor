@@ -15,6 +15,7 @@ import SignIn from '~/pages/SignIn/SignIn'
 import UserPage from '~/pages/User/UserPage'
 import { GuardAccount } from './guardRoute'
 import StaffPage from '~/pages/Staff/StaffPage'
+import BillPage from '~/pages/BillPage/BillPage'
 
 const routers = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const routers = createBrowserRouter([
       {
         element: <GuardAccount JSX={DefaultLayout} />,
         children: [
+          { path: 'bill', element: <BillPage /> },
           { path: 'services', element: <ServicesPage /> },
           { path: 'doctor', element: <DoctorPage /> },
           { path: 'role', element: <RolePage /> },

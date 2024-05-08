@@ -6,8 +6,9 @@ import { getAuthLocalData } from '~/configs/token'
 interface BreadcrumbProps {
   pageName: string
   openDrawer?: () => void
+  btnAdd?: boolean
 }
-const Breadcrumb = ({ pageName, openDrawer }: BreadcrumbProps) => {
+const Breadcrumb = ({ pageName, openDrawer, btnAdd }: BreadcrumbProps) => {
   const auth = getAuthLocalData()
   return (
     <div className='mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
@@ -20,7 +21,7 @@ const Breadcrumb = ({ pageName, openDrawer }: BreadcrumbProps) => {
         </ol>
       </nav>
       <>
-        {auth?.user.roleName == 'admin' && (
+        {auth?.user.roleName == 'admin' && !btnAdd && (
           <Button icon={<PlusIcon />} onClick={openDrawer}>
             Thêm
           </Button>

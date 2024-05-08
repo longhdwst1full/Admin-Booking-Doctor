@@ -24,7 +24,7 @@ export default function Dashboard() {
       const { data: dataUser } = await getCaller<IUsers[]>('/User')
       const { data: clinics } = await getCaller<IClinic[]>('/Clinics')
       const { data: doctors } = await getCaller<IDoctor[]>('/Doctors')
-      const { data: dataAppoinments } = authData && (await getCaller<IAppointment[]>('/Appointments'))
+      const { data: dataAppoinments } = await getCaller<IAppointment[]>('/Appointments')
       console.log(data, clinics, doctors, dataUser, 'p333333l')
       data && setDataService(data)
       doctors && setDataDoctor(doctors)
@@ -47,7 +47,7 @@ export default function Dashboard() {
     },
     {
       name: 'Cuộc hẹn',
-      total: dataAppointment?.length || 99
+      total: dataAppointment?.length || 0
     },
     {
       name: 'Khách hàng',
@@ -55,7 +55,7 @@ export default function Dashboard() {
     },
     { name: 'Dịch vụ', total: dataSevice?.length || 99 }
   ]
-  // console.log(analytics)
+
   return (
     <>
       <div className='w-full px-10 lg:pr-28'>

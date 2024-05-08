@@ -1,9 +1,9 @@
-import { ShoppingOutlined, UserOutlined } from '@ant-design/icons'
-import { AiOutlineControl } from 'react-icons/ai'
-import { BiCategoryAlt, BiSolidCategoryAlt } from 'react-icons/bi'
-import { FaClipboardList, FaListUl, FaPeopleArrows, FaUserFriends } from 'react-icons/fa'
-
+import { UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
+import { AiOutlineControl } from 'react-icons/ai'
+import { BiClinic, BiSolidCategoryAlt } from 'react-icons/bi'
+import { FaClipboardList, FaListUl, FaPeopleArrows, FaRegMoneyBillAlt, FaUserFriends } from 'react-icons/fa'
+import { FaCriticalRole, FaUserDoctor } from 'react-icons/fa6'
 import { NavLink } from 'react-router-dom'
 import { getAuthLocalData, removeAuthLocalData } from '~/configs/token'
 
@@ -27,6 +27,7 @@ function getItem(
 const menuStaff: MenuProps['items'] = [
   // quản lý sản phẩm
   getItem('Quản lý', 'manager', <AiOutlineControl />, [
+    getItem(<NavLink to={`/manager/bill`}>Hóa đơn</NavLink>, 'bill', <FaRegMoneyBillAlt />),
     getItem(<NavLink to={`/manager/appointments`}>Cuộc hẹn</NavLink>, 'Appointments', <FaListUl />)
   ])
 ]
@@ -36,14 +37,15 @@ const menuAdmin: MenuProps['items'] = [
 
   // quản lý sản phẩm
   getItem('Quản lý', 'manager', <AiOutlineControl />, [
-    getItem(<NavLink to={`/manager/doctor`}>Bác sĩ</NavLink>, 'doctor', <ShoppingOutlined />),
-    getItem(<NavLink to={`/manager/clinic`}>Phòng Khám</NavLink>, 'clinic', <BiSolidCategoryAlt />),
+    getItem(<NavLink to={`/manager/bill`}>Hóa đơn</NavLink>, 'bill', <FaRegMoneyBillAlt />),
+    getItem(<NavLink to={`/manager/doctor`}>Bác sĩ</NavLink>, 'doctor', <FaUserDoctor />),
+    getItem(<NavLink to={`/manager/clinic`}>Phòng Khám</NavLink>, 'clinic', <BiClinic />),
     getItem(<NavLink to={`/manager/services`}>Dịch vụ</NavLink>, 'services', <BiSolidCategoryAlt />),
 
     getItem(<NavLink to={`/manager/appointments`}>Cuộc hẹn</NavLink>, 'Appointments', <FaListUl />),
     getItem(<NavLink to={`/manager/specialites`}>Chuyên khoa</NavLink>, 'Specialities', <FaPeopleArrows />),
 
-    getItem(<NavLink to={`/manager/role`}>Chức vụ</NavLink>, 'role', <BiCategoryAlt />)
+    getItem(<NavLink to={`/manager/role`}>Chức vụ</NavLink>, 'role', <FaCriticalRole />)
     // quản lý người dùng
   ]),
   getItem('Người dùng', 'users', <UserOutlined />, [
@@ -53,9 +55,7 @@ const menuAdmin: MenuProps['items'] = [
 ]
 const menuDoctor: MenuProps['items'] = [
   getItem('Quản lý', 'manager', <AiOutlineControl />, [
-    getItem(<NavLink to={`/manager/clinic`}>Phòng Khám</NavLink>, 'clinic', <BiSolidCategoryAlt />),
-    getItem(<NavLink to={`/manager/services`}>Dịch vụ</NavLink>, 'services', <BiSolidCategoryAlt />),
-
+    getItem(<NavLink to={`/manager/clinic`}>Phòng Khám</NavLink>, 'clinic', <BiClinic />),
     getItem(<NavLink to={`/manager/appointments`}>Cuộc hẹn</NavLink>, 'Appointments', <FaListUl />),
     getItem(<NavLink to={`/manager/specialites`}>Chuyên khoa</NavLink>, 'Specialities', <FaPeopleArrows />)
   ])
@@ -66,7 +66,6 @@ export const handleMenu = () => {
 
   if (!user) {
     removeAuthLocalData()
-    window.location.reload()
   }
   const role = user.user.roleName
   return role == 'admin' ? menuAdmin : role == 'doctor' ? menuDoctor : menuStaff

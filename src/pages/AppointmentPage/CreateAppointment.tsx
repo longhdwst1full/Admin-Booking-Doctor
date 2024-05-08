@@ -32,7 +32,7 @@ export default function CreateAppointment({ dataEdit, onFinish, form }: Props) {
         setDataService(data)
         setDataDoctor(doctors)
         setDataClinic(clinics)
-        setDataUser(dataUser)
+        setDataUser(dataUser?.filter(item => item.roleName=="user"))
       }
     }
     handelGetIdService()
@@ -171,8 +171,8 @@ export default function CreateAppointment({ dataEdit, onFinish, form }: Props) {
                 label: 'payed'
               },
               {
-                value: 'done ',
-                label: 'done '
+                value: 'done',
+                label: 'done'
               }
             ]}
           />
