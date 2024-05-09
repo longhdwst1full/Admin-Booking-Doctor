@@ -25,7 +25,7 @@ export default function Dashboard() {
       const { data: clinics } = await getCaller<IClinic[]>('/Clinics')
       const { data: doctors } = await getCaller<IDoctor[]>('/Doctors')
       const { data: dataAppoinments } = await getCaller<IAppointment[]>('/Appointments')
-      console.log(data, clinics, doctors, dataUser, 'p333333l')
+    
       data && setDataService(data)
       doctors && setDataDoctor(doctors)
       dataUser && setDataUser(dataUser)

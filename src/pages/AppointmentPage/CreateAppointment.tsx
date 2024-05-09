@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function CreateAppointment({ dataEdit, onFinish, form }: Props) {
-  console.log(dataEdit)
+  
   const [dataSevice, setDataService] = useState<IServices[]>()
   const [dataUser, setDataUser] = useState<IUsers[]>()
   const [dataDoctor, setDataDoctor] = useState<IDoctor[]>()

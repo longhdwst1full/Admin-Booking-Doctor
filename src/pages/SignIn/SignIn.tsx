@@ -30,7 +30,7 @@ export default function SignIn() {
       isDoctor: false
     }).then(async (data: any) => {
       if (!data) return false
-      console.log(data?.data, '::::')
+
       const dataUser = data?.data?.user?.roleName
 
       if (['admin', 'doctor', 'staff'].includes(dataUser)) {

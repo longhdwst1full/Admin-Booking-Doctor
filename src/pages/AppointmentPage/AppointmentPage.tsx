@@ -39,10 +39,10 @@ export default function AppointmentPage() {
       await postCaller('/Appointments/' + values.userID, values)
       toast.success('Thêm cuộc hẹn thành công!')
     } else {
-      const dataRes = await postCaller(`/Appointments/update/${dataEdit.appointmentId}`, {
+      await postCaller(`/Appointments/update/${dataEdit.appointmentId}`, {
         status: values.status
       })
-      console.log(dataRes)
+
       toast.success('Update cuộc hẹn thành công!')
     }
     await handleGetData()

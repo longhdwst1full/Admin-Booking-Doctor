@@ -20,7 +20,7 @@ export default function ChangePassword() {
 
   const handleFinish = async (data: FieldType) => {
     if (data) {
-      console.log(data)
+   
       postCaller(`User/update/passWord/${dataAuth?.id}`, {
         password: data.password
       })

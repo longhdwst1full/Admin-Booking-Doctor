@@ -63,7 +63,7 @@ export const useSevices = () => {
 
       return (res);
     } catch (err: any) {
-      console.log(err)
+
       toast.error(err?.response?.data?.title)
     }
   };

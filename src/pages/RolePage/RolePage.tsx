@@ -70,7 +70,7 @@ export default function RolePage() {
       key: 'action',
       title: 'Action',
       render: (data: any) => {
-        console.log(data)
+        
         return (
           <Space size='middle'>
             <Button
