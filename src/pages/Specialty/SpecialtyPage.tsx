@@ -44,11 +44,11 @@ export default function SpecialtyPage() {
       specialtyName: values.specialtyName
     }
     if (!dataEdit?.specialtyID) {
-      postCaller('Specialty', dataBody).then(() => {
+      await postCaller('Specialty', dataBody).then(() => {
         toast.success('Thêm thành công')
       })
     } else {
-      putCaller(`Specialty/${dataEdit.specialtyID}`, { ...dataBody }).then(() => {
+      await putCaller(`Specialty/${dataEdit.specialtyID}`, { ...dataBody }).then(() => {
         toast.success('Update success')
       })
     }
@@ -60,7 +60,7 @@ export default function SpecialtyPage() {
 
   const dataSource = useMemo(
     () =>
-      dataSpecialty?.map((items, index) => {
+      dataSpecialty?.reverse()?.map((items, index) => {
         return {
           stt: index + 1,
           key: items.specialtyID,
@@ -113,7 +113,6 @@ export default function SpecialtyPage() {
   useDebounce(
     () => {
       if (serviceName) {
-console.log(333)
         const res = dataSpecialty?.filter(
           (d) =>
             d.specialtyName.includes(serviceName) ||
@@ -121,10 +120,9 @@ console.log(333)
         )
 
         setDataSpecialty(res)
-      }  
-      console.log(3)
+      }
     },
-    [serviceName,  ],
+    [serviceName],
     800
   )
 

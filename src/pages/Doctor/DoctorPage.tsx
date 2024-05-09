@@ -20,7 +20,7 @@ export default function DoctorPage() {
 
   const fetch = async () => {
     const { data } = await getCaller<IDoctor[]>('/Doctors')
-    setdataDoctor(data)
+    setdataDoctor(data.reverse())
   }
 
   useEffect(() => {

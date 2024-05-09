@@ -55,7 +55,7 @@ export default function StaffPage() {
     form.resetFields()
   }
 
-  const dataSource = dataRoles?.map((items, index) => {
+  const dataSource = dataRoles?.reverse()?.map((items, index) => {
     return {
       stt: index + 1,
       key: items.id,
@@ -72,6 +72,7 @@ export default function StaffPage() {
     user ? setDataEdit(user) : toast.error('Không tìm thấy người dùng')
     setOpenDrawer(true)
   }
+
   const columns = [
     {
       title: '#',
@@ -105,20 +106,21 @@ export default function StaffPage() {
     },
 
     {
-      render: ({ key }: any) => {
+      render: (data: any) => {
         return (
           <div className='space-x-5'>
             <Button
               onClick={() => {
-                handleGetUser(key)
+                handleGetUser(data.key)
               }}
             >
               Edit
             </Button>
             <Button
+              disabled={data.roleName == 'admin'}
               onClick={async () => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
-                  await deleteCaller(`/User/${key}`)
+                  await deleteCaller(`/User/${data.key}`)
                   await handleGetData()
                 }
               }}
@@ -141,7 +143,7 @@ export default function StaffPage() {
         placement='right'
         width={700}
         onClose={() => {
-          setOpenDrawer(true)
+          setOpenDrawer(false)
           setDataEdit(undefined)
         }}
         open={openDrawer}

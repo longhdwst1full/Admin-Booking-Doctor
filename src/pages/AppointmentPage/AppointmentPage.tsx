@@ -5,6 +5,8 @@ import Breadcrumb from '~/components/Breadcrumb/Breadcrumb'
 import { useSevices } from '~/configs/useSevice'
 import { IAppointment } from '~/types/appointment'
 import CreateAppointment from './CreateAppointment'
+import dayjs from 'dayjs'
+import TitlePage from '~/components/TitlePage'
 
 export default function AppointmentPage() {
   const [dataEdit, setDataEdit] = useState<IAppointment>()
@@ -48,7 +50,7 @@ export default function AppointmentPage() {
     setOpenDrawer(false)
     setDataEdit(undefined)
   }
-  const dataSource = dataAppointment?.map((items, index: number) => {
+  const dataSource = dataAppointment?.reverse()?.map((items, index: number) => {
     return {
       stt: index + 1,
       key: items.appointmentId,
@@ -85,7 +87,10 @@ export default function AppointmentPage() {
     {
       title: 'Ngày',
       dataIndex: 'appointmentDate',
-      key: 'appointmentDate'
+      key: 'appointmentDate',
+      render: (data: string) => {
+        return <span>{dayjs(data).format('dddd,HH:mm DD/MM/YYYY')}</span>
+      }
     },
     {
       title: 'Giá',
@@ -142,7 +147,9 @@ export default function AppointmentPage() {
           setDataEdit(undefined)
         }}
       />
-
+      <div className='flex justify-between'>
+        <TitlePage title='Quản lý cuộc hẹn' />
+      </div>
       <Table dataSource={dataSource} columns={columns} />
       <Drawer
         title={`${!dataEdit ? 'Thêm' : 'Cập nhật'} cuộc hẹn`}

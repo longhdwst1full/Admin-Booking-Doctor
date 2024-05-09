@@ -18,7 +18,7 @@ export default function RolePage() {
   const handleGetData = async () => {
     const data = await getCaller<IRole[]>('/Role')
     if (data) {
-      setDataRoles(data.data)
+      setDataRoles(data.data.reverse())
     }
   }
 
@@ -56,7 +56,8 @@ export default function RolePage() {
     {
       key: 'id',
       dataIndex: 'id',
-      title: 'id'
+      title: 'id',
+      render: (_, __, i) => <> {i + 1} </>
     },
 
     {
@@ -83,6 +84,7 @@ export default function RolePage() {
               Sửa
             </Button>
             <Button
+              disabled={data.name == 'admin'}
               onClick={() => {
                 if (window.confirm('Are you sure you want to delete this item?')) {
                   if (data.name == 'admin') {
