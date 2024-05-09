@@ -17,7 +17,7 @@ export default function StaffPage() {
   const handleGetData = async () => {
     const data = await getCaller<IUsers[]>('User')
     if (data) {
-      setDataRoles(data.data)
+      setDataRoles(data.data.filter((item) => item.roleName != 'user'))
     }
   }
 
