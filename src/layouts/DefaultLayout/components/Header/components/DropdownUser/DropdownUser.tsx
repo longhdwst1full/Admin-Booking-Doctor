@@ -9,6 +9,7 @@ import ArrowDown from '~/components/Icons/ArrowDown'
 import ProfileIcon from '~/components/Icons/ProfileIcon'
 
 import { getAuthLocalData, removeAuthLocalData } from '~/configs/token'
+import { Avatar } from 'antd'
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -52,9 +53,21 @@ const DropdownUser = () => {
           <span className='block text-xs capitalize'>{user?.role === 'staff' ? 'Nhân viên' : user?.role}</span>
         </span>
 
-        <span className='w-12 h-12 rounded-full'>
-          <img src={`${user?.avatar}`} className='object-cover w-full h-full rounded-full' alt='User' />
-        </span>
+       
+          <Avatar
+            style={{
+              backgroundColor: '#f56a00',
+              verticalAlign: 'middle',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              textTransform: 'uppercase'
+            }}
+            size='default'
+          >
+            {user && user?.user?.userName?.split('')[0]}
+          </Avatar>
+          
+         
 
         <ArrowDown />
       </Link>
